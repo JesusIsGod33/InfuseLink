@@ -1,3 +1,3 @@
 [build]
-  publish = "."
-  functions = "netlify/functions"
+  publish = "InfuseLink"
+  functions = "InfuseLink/netlify/functions"
