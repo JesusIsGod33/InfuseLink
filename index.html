@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InfuseLink - AI Resume Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center p-8">
+    <h1 class="text-4xl font-bold mb-8 text-blue-400">InfuseLink AI</h1>
+    <div class="w-full max-w-2xl bg-gray-800 p-6 rounded-lg shadow-xl">
+        <textarea id="userInput" class="w-full h-40 p-4 bg-gray-700 rounded text-white border border-gray-600 focus:outline-none focus:border-blue-500" placeholder="Paste your job description and experience here..."></textarea>
+        <button onclick="generateResume()" id="genBtn" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded transition">Generate AI Resume</button>
+    </div>
+    <div id="output" class="w-full max-w-2xl mt-8 p-6 bg-gray-800 rounded-lg hidden border-l-4 border-blue-500">
+        <h2 class="text-xl font-semibold mb-4 text-blue-300">Your AI-Generated Content:</h2>
+        <div id="resumeContent" class="whitespace-pre-wrap text-gray-300"></div>
+    </div>
+
+    <script>
+        async function generateResume() {
+            const input = document.getElementById('userInput').value;
+            const btn = document.getElementById('genBtn');
+            const outputDiv = document.getElementById('output');
+            const contentDiv = document.getElementById('resumeContent');
+
+            if (!input) return alert("Please enter some text!");
+
+            btn.innerText = "Thinking...";
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('/.netlify/functions/resume', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: input })
+                });
+
+                const data = await response.json();
+                
+                // This matches the specific way Gemini returns data
+                const text = data.candidates ? data.candidates[0].content.parts[0].text : data.content[0].text;
+                
+                contentDiv.innerText = text;
+                outputDiv.classList.remove('hidden');
+            } catch (err) {
+                alert("Error: " + err.message);
+            } finally {
+                btn.innerText = "Generate AI Resume";
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
