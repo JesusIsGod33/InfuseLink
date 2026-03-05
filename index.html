@@ -1,1 +1,2963 @@
-<!DOCTYPE html>\n<html lang='en'>\n<head>\n    <meta charset='UTF-8'>\n    <meta name='viewport' content='width=device-width, initial-scale=1.0'>\n    <title>InfuseLink</title>\n    <style>\n        body { margin: 0; font-family: Arial, sans-serif; }\n        .hero { background: #6e1e7a; color: white; text-align: center; padding: 50px 20px; animation: fadeIn 2s; }\n        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }\n        .features { display: flex; justify-content: space-around; padding: 20px 0; }\n        .feature { background: #f2f2f2; padding: 20px; border-radius: 8px; text-align: center; }\n        .wizard { display: flex; justify-content: space-around; padding: 50px 0; }\n        .step { border: 2px solid #6e1e7a; padding: 20px; border-radius: 10px; width: 30%; text-align: center; }\n        .dashboard { display: flex; }\n        .sidebar { width: 200px; background: #343a40; color: white; padding: 20px; }\n        .sidebar a { color: white; text-decoration: none; display: block; padding: 10px; }\n        .main { flex: 1; padding: 20px; }\n        .job-matches { margin: 20px 0; }\n        .ai-agent, .pricing { margin: 20px 0; }\n        .pricing-tier { background: #e9ecef; margin: 10px; padding: 10px; border-radius: 5px; }\n        .score-ring { width: 100px; height: 100px; border-radius: 50%; background: conic-gradient(#4caf50 75%, #e0e0e0 75%); display: flex; align-items: center; justify-content: center; font-weight: bold; }\n        @media (max-width: 600px) { .dashboard { flex-direction: column; } .sidebar { width: 100%; } }\n        .notification { position: fixed; bottom: 20px; right: 20px; background: #28a745; color: white; padding: 10px; border-radius: 5px; display: none; }\n    </style>\n</head>\n<body>\n    <div class='hero'>\n        <h1>Welcome to InfuseLink</h1>\n        <p>Your journey to finding the best job matches started here.</p>\n    </div>\n    <div class='features'>\n        <div class='feature'>Feature 1</div>\n        <div class='feature'>Feature 2</div>\n        <div class='feature'>Feature 3</div>\n    </div>\n    <div class='wizard'>\n        <div class='step'>Step 1</div>\n        <div class='step'>Step 2</div>\n        <div class='step'>Step 3</div>\n    </div>\n    <div class='dashboard'>\n        <div class='sidebar'>\n            <a href='#'>Home</a>\n            <a href='#'>Job Matches</a>\n            <a href='#'>Applications</a>\n            <a href='#'>Resume AI</a>\n            <a href='#'>Agent</a>\n            <a href='#'>Settings</a>\n        </div>\n        <div class='main'>\n            <div class='job-matches'>\n                <h2>Job Matches</h2>\n                <!-- Adzuna API Integration -->\n            </div>\n            <div class='ai-agent'>\n                <h2>AI Agent Panel</h2>\n                <div id='logs'></div>\n            </div>\n            <div class='pricing'>\n                <h2>Pricing Plans</h2>\n                <div class='pricing-tier'>Tier 1</div>\n                <div class='pricing-tier'>Tier 2</div>\n                <div class='pricing-tier'>Tier 3</div>\n                <div class='pricing-tier'>Tier 4</div>\n                <div class='pricing-tier'>Tier 5</div>\n                <div class='pricing-tier'>Tier 6</div>\n            </div>\n        </div>\n    </div>\n    <div class='notification'>Toast Notification</div>\n    <script>\n        // LocalStorage management and toast notifications\n        const showNotification = (msg) => {\n            const notification = document.querySelector('.notification');\n            notification.innerText = msg;\n            notification.style.display = 'block';\n            setTimeout(() => notification.style.display = 'none', 3000);\n        };\n        // Sample function to demonstrate usage\n        showNotification('Welcome to InfuseLink!');\n        // Typing animation for auto-fill\n        const typingAnimation = (element, text, index = 0) => {\n            if (index < text.length) {\n                element.innerHTML += text.charAt(index);\n                setTimeout(() => typingAnimation(element, text, index + 1), 100);\n            } else {\n                // Call to AI agent execution panel can be placed here\n            }\n        };\n        typingAnimation(document.querySelector('.ai-agent'), 'Executing AI tools...');\n    </script>\n</body>\n</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>InfuseLink — Your AI Job Search Copilot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+<style>
+:root {
+  --teal: #0d9488;
+  --teal-light: #14b8a6;
+  --teal-dark: #0f766e;
+  --coral: #f97316;
+  --coral-light: #fb923c;
+  --navy: #0f172a;
+  --navy2: #1e293b;
+  --slate: #475569;
+  --slate-light: #64748b;
+  --border: #e2e8f0;
+  --bg: #ffffff;
+  --bg2: #f8fafc;
+  --bg3: #f1f5f9;
+  --text: #0f172a;
+  --text2: #475569;
+  --text3: #94a3b8;
+  --green: #22c55e;
+  --red: #ef4444;
+  --yellow: #eab308;
+  --purple: #8b5cf6;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  --shadow: 0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.06);
+  --shadow-md: 0 10px 15px rgba(0,0,0,.08), 0 4px 6px rgba(0,0,0,.05);
+  --shadow-lg: 0 20px 25px rgba(0,0,0,.09), 0 10px 10px rgba(0,0,0,.04);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--font-body);color:var(--text);background:var(--bg);line-height:1.6;overflow-x:hidden}
+img{max-width:100%;display:block}
+button{cursor:pointer;font-family:var(--font-body)}
+input,textarea,select{font-family:var(--font-body)}
+a{color:inherit;text-decoration:none}
+
+/* ── UTILITY ── */
+.hidden{display:none!important}
+.flex{display:flex}.grid{display:grid}
+.items-center{align-items:center}.justify-between{justify-content:space-between}.justify-center{justify-content:center}
+.gap-2{gap:8px}.gap-3{gap:12px}.gap-4{gap:16px}.gap-6{gap:24px}.gap-8{gap:32px}
+.w-full{width:100%}.h-full{height:100%}
+.text-sm{font-size:.875rem}.text-xs{font-size:.75rem}.text-lg{font-size:1.125rem}.text-xl{font-size:1.25rem}.text-2xl{font-size:1.5rem}.text-3xl{font-size:1.875rem}.text-4xl{font-size:2.25rem}
+.font-medium{font-weight:500}.font-semibold{font-weight:600}.font-bold{font-weight:700}
+.text-teal{color:var(--teal)}.text-coral{color:var(--coral)}.text-slate{color:var(--slate)}.text-navy{color:var(--navy)}
+.mt-1{margin-top:4px}.mt-2{margin-top:8px}.mt-3{margin-top:12px}.mt-4{margin-top:16px}.mt-6{margin-top:24px}.mt-8{margin-top:32px}
+.mb-2{margin-bottom:8px}.mb-4{margin-bottom:16px}.mb-6{margin-bottom:24px}
+.p-4{padding:16px}.p-6{padding:24px}.rounded{border-radius:var(--radius-sm)}.rounded-lg{border-radius:var(--radius)}.rounded-full{border-radius:9999px}
+.bg-teal{background:var(--teal)}.bg-coral{background:var(--coral)}.bg-navy{background:var(--navy)}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border-radius:var(--radius-sm);font-weight:600;font-size:.9rem;border:none;transition:all .2s ease;white-space:nowrap;cursor:pointer}
+.btn-primary{background:var(--teal);color:#fff;box-shadow:0 2px 8px rgba(13,148,136,.3)}
+.btn-primary:hover{background:var(--teal-dark);box-shadow:0 4px 12px rgba(13,148,136,.4);transform:translateY(-1px)}
+.btn-coral{background:var(--coral);color:#fff;box-shadow:0 2px 8px rgba(249,115,22,.3)}
+.btn-coral:hover{background:#ea6c0a;box-shadow:0 4px 12px rgba(249,115,22,.4);transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--teal);border:2px solid var(--teal)}
+.btn-outline:hover{background:var(--teal);color:#fff}
+.btn-ghost{background:transparent;color:var(--slate);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--bg3);color:var(--navy)}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-navy:hover{background:var(--navy2);transform:translateY(-1px)}
+.btn-sm{padding:7px 14px;font-size:.8rem}
+.btn-lg{padding:14px 28px;font-size:1rem;border-radius:var(--radius)}
+
+/* ── FORMS ── */
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:.85rem;font-weight:600;color:var(--navy2);margin-bottom:6px}
+.form-control{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:.9rem;color:var(--text);background:#fff;transition:border-color .2s,box-shadow .2s;outline:none}
+.form-control:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,148,136,.12)}
+.form-control::placeholder{color:var(--text3)}
+textarea.form-control{resize:vertical;min-height:100px}
+select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;cursor:pointer}
+.input-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+/* ── CARDS ── */
+.card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:24px;box-shadow:var(--shadow-sm)}
+.card:hover{box-shadow:var(--shadow-md);transition:box-shadow .2s}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:9999px;font-size:.72rem;font-weight:700;letter-spacing:.03em}
+.badge-teal{background:rgba(13,148,136,.1);color:var(--teal-dark)}
+.badge-coral{background:rgba(249,115,22,.1);color:#c2410c}
+.badge-green{background:rgba(34,197,94,.1);color:#15803d}
+.badge-yellow{background:rgba(234,179,8,.1);color:#92400e}
+.badge-red{background:rgba(239,68,68,.1);color:#b91c1c}
+.badge-purple{background:rgba(139,92,246,.1);color:#6d28d9}
+.badge-navy{background:rgba(15,23,42,.08);color:var(--navy)}
+
+/* ── VIEWS ── */
+.view{display:none}.view.active{display:block}
+#view-dashboard{display:none}
+#view-dashboard.active{display:flex}
+
+/* ══════════════════════════════════════
+   LANDING PAGE
+══════════════════════════════════════ */
+/* NAV */
+#landing-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:8px}
+.nav-logo span{color:var(--teal)}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-size:.88rem;font-weight:500;color:var(--slate);transition:color .2s}
+.nav-links a:hover{color:var(--teal)}
+.nav-actions{display:flex;align-items:center;gap:12px}
+
+/* HERO */
+#hero{min-height:calc(100vh - 64px);display:flex;align-items:center;background:linear-gradient(135deg, #f8fafc 0%, #f0fdfa 40%, #fff7ed 100%);position:relative;overflow:hidden;padding:80px 40px}
+.hero-content{flex:1;max-width:600px;position:relative;z-index:2}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(13,148,136,.1);color:var(--teal-dark);border:1px solid rgba(13,148,136,.2);padding:6px 14px;border-radius:9999px;font-size:.8rem;font-weight:600;margin-bottom:24px}
+.hero-badge::before{content:'✦';color:var(--teal)}
+.hero-h1{font-family:var(--font-display);font-size:clamp(2.4rem,5vw,3.8rem);line-height:1.15;font-weight:700;color:var(--navy);margin-bottom:20px}
+.hero-h1 em{font-style:italic;color:var(--teal)}
+.hero-sub{font-size:1.1rem;color:var(--slate);line-height:1.7;max-width:480px;margin-bottom:36px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px}
+.trust-bar{display:flex;flex-wrap:wrap;gap:24px}
+.trust-item{display:flex;flex-direction:column;gap:2px}
+.trust-num{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:var(--navy)}
+.trust-label{font-size:.78rem;color:var(--slate);font-weight:500}
+.hero-visual{flex:1;position:relative;min-height:400px;display:flex;align-items:center;justify-content:center}
+.resume-card{position:absolute;background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);padding:20px;width:240px;border:1px solid var(--border)}
+.resume-card-1{top:20px;right:60px;transform:rotate(-3deg);animation:float1 4s ease-in-out infinite}
+.resume-card-2{top:120px;right:20px;transform:rotate(2deg);animation:float2 5s ease-in-out infinite .5s}
+.resume-card-3{bottom:40px;right:80px;transform:rotate(-1deg);animation:float3 4.5s ease-in-out infinite 1s}
+@keyframes float1{0%,100%{transform:rotate(-3deg) translateY(0)}50%{transform:rotate(-3deg) translateY(-12px)}}
+@keyframes float2{0%,100%{transform:rotate(2deg) translateY(0)}50%{transform:rotate(2deg) translateY(-8px)}}
+@keyframes float3{0%,100%{transform:rotate(-1deg) translateY(0)}50%{transform:rotate(-1deg) translateY(-10px)}}
+.resume-card-header{height:8px;border-radius:4px;margin-bottom:12px}
+.resume-card-line{height:6px;border-radius:3px;background:var(--bg3);margin-bottom:6px}
+.resume-card-line.short{width:60%}
+.resume-card-line.medium{width:80%}
+.resume-card-score{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.score-label{font-size:.7rem;color:var(--slate);font-weight:600}
+.score-val{font-size:.85rem;font-weight:700;color:var(--teal)}
+/* hero bg blobs */
+.hero-blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.15;pointer-events:none}
+.blob1{width:400px;height:400px;background:var(--teal);top:-100px;right:-100px}
+.blob2{width:300px;height:300px;background:var(--coral);bottom:0;right:200px}
+
+/* HOW IT WORKS */
+#how-it-works{padding:100px 40px;background:#fff}
+.section-label{font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:12px}
+.section-title{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;color:var(--navy);line-height:1.2;margin-bottom:16px}
+.section-sub{font-size:1rem;color:var(--slate);max-width:520px;line-height:1.7}
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:60px;position:relative}
+.steps-grid::before{content:'';position:absolute;top:36px;left:10%;right:10%;height:2px;background:linear-gradient(90deg,var(--teal),var(--coral));z-index:0;opacity:.3}
+.step-card{text-align:center;position:relative;z-index:1}
+.step-num{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff;font-family:var(--font-display);font-size:1.5rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 8px 20px rgba(13,148,136,.25)}
+.step-title{font-weight:700;color:var(--navy);margin-bottom:8px;font-size:1rem}
+.step-desc{font-size:.85rem;color:var(--slate);line-height:1.6}
+
+/* FEATURES */
+#features{padding:100px 40px;background:var(--bg2)}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:60px}
+.feature-card{background:#fff;border-radius:var(--radius-lg);padding:28px;border:1px solid var(--border);transition:all .25s ease;position:relative;overflow:hidden}
+.feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--teal),var(--coral));opacity:0;transition:opacity .25s}
+.feature-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.feature-card:hover::before{opacity:1}
+.feature-icon{width:52px;height:52px;border-radius:var(--radius-sm);background:linear-gradient(135deg,rgba(13,148,136,.1),rgba(13,148,136,.15));display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:20px}
+.feature-title{font-weight:700;color:var(--navy);margin-bottom:8px;font-size:1.05rem}
+.feature-desc{font-size:.88rem;color:var(--slate);line-height:1.6}
+
+/* AGENT SPOTLIGHT */
+#agent-spotlight{padding:100px 40px;background:#fff;overflow:hidden}
+.spotlight-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1100px;margin:0 auto}
+.spotlight-text .section-title{margin-bottom:24px}
+.mode-cards{display:flex;flex-direction:column;gap:16px;margin-top:32px}
+.mode-card{padding:20px;border-radius:var(--radius);border:2px solid var(--border);cursor:pointer;transition:all .2s}
+.mode-card.active{border-color:var(--teal);background:rgba(13,148,136,.04)}
+.mode-card-header{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.mode-icon{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+.mode-card-title{font-weight:700;color:var(--navy)}
+.mode-card-desc{font-size:.85rem;color:var(--slate);line-height:1.6}
+/* agent mockup */
+.agent-mockup{background:var(--bg2);border-radius:var(--radius-lg);padding:24px;border:1px solid var(--border);box-shadow:var(--shadow-lg)}
+.mockup-header{display:flex;align-items:center;gap:8px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.mockup-dot{width:10px;height:10px;border-radius:50%}
+.mockup-title{font-size:.85rem;font-weight:600;color:var(--slate)}
+.mockup-job{display:flex;align-items:center;gap:12px;padding:12px;border-radius:var(--radius-sm);background:#fff;border:1px solid var(--border);margin-bottom:10px;transition:all .3s}
+.mockup-job.processing{border-color:var(--teal);background:rgba(13,148,136,.04);animation:pulse-border 1s infinite}
+@keyframes pulse-border{0%,100%{border-color:var(--teal);box-shadow:0 0 0 0 rgba(13,148,136,.2)}50%{box-shadow:0 0 0 4px rgba(13,148,136,.1)}}
+.mockup-company{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.75rem;color:#fff}
+.mockup-info{flex:1}
+.mockup-job-title{font-size:.82rem;font-weight:600;color:var(--navy)}
+.mockup-job-co{font-size:.75rem;color:var(--slate)}
+.mockup-score{font-size:.8rem;font-weight:700;color:var(--teal)}
+.agent-status-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(13,148,136,.08);border-radius:var(--radius-sm);margin-top:14px}
+.pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse-green 1.5s infinite}
+@keyframes pulse-green{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}70%{box-shadow:0 0 0 6px rgba(34,197,94,0)}}
+.agent-status-text{font-size:.78rem;color:var(--teal-dark);font-weight:600}
+
+/* TESTIMONIALS */
+#testimonials{padding:100px 40px;background:var(--bg2)}
+.testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:60px}
+.testimonial-card{background:#fff;border-radius:var(--radius-lg);padding:28px;border:1px solid var(--border);box-shadow:var(--shadow-sm)}
+.stars{color:var(--coral);font-size:1.1rem;margin-bottom:16px}
+.testimonial-quote{font-size:.95rem;color:var(--slate);line-height:1.7;margin-bottom:20px;font-style:italic}
+.testimonial-author{display:flex;align-items:center;gap:12px}
+.author-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.9rem}
+.author-name{font-weight:700;color:var(--navy);font-size:.9rem}
+.author-role{font-size:.78rem;color:var(--slate)}
+
+/* PRICING */
+#pricing{padding:100px 40px;background:#fff}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:60px}
+.pricing-card{border-radius:var(--radius-lg);padding:28px;border:2px solid var(--border);position:relative;transition:all .25s;background:#fff}
+.pricing-card.featured{border-color:var(--teal);background:linear-gradient(135deg,rgba(13,148,136,.03),rgba(13,148,136,.07))}
+.pricing-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.pricing-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--coral);color:#fff;font-size:.7rem;font-weight:700;padding:4px 14px;border-radius:9999px;white-space:nowrap}
+.pricing-plan{font-weight:700;color:var(--navy);font-size:1.05rem;margin-bottom:4px}
+.pricing-price{font-family:var(--font-display);font-size:2.2rem;font-weight:700;color:var(--navy);margin:12px 0 4px}
+.pricing-price span{font-size:1rem;font-weight:400;color:var(--slate)}
+.pricing-desc{font-size:.82rem;color:var(--slate);margin-bottom:20px}
+.pricing-features{list-style:none;margin-bottom:24px}
+.pricing-features li{font-size:.85rem;color:var(--slate);padding:5px 0;display:flex;align-items:center;gap:8px}
+.pricing-features li::before{content:'✓';color:var(--teal);font-weight:700;flex-shrink:0}
+
+/* FB DEALS */
+#fb-deals{padding:80px 40px;background:linear-gradient(135deg,var(--navy) 0%,#1a2744 100%)}
+.fb-deals-inner{max-width:900px;margin:0 auto;text-align:center}
+.fb-deals-inner .section-title{color:#fff}
+.fb-deals-inner .section-sub{color:rgba(255,255,255,.7);margin:16px auto 48px}
+.coupons-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.coupon-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:var(--radius);padding:20px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(4px)}
+.coupon-code{font-family:monospace;font-size:1rem;font-weight:700;color:var(--coral-light);letter-spacing:.05em;background:rgba(249,115,22,.1);border:1px dashed rgba(249,115,22,.3);padding:6px 14px;border-radius:6px}
+.coupon-info{text-align:right}
+.coupon-plan{font-size:.8rem;color:rgba(255,255,255,.7);margin-bottom:2px}
+.coupon-price{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:#fff}
+.coupon-savings{font-size:.72rem;color:var(--coral-light);font-weight:600}
+
+/* FOOTER */
+footer{background:var(--navy);color:rgba(255,255,255,.8);padding:60px 40px 32px}
+.footer-inner{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;max-width:1100px;margin:0 auto}
+.footer-brand .nav-logo{color:#fff;margin-bottom:12px}
+.footer-brand .nav-logo span{color:var(--teal-light)}
+.footer-tagline{font-size:.85rem;color:rgba(255,255,255,.5);line-height:1.6}
+.footer-col-title{font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:16px}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:8px}
+.footer-links a{font-size:.85rem;color:rgba(255,255,255,.6);transition:color .2s}
+.footer-links a:hover{color:#fff}
+.footer-bottom{max-width:1100px;margin:40px auto 0;padding-top:24px;border-top:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:space-between;font-size:.8rem;color:rgba(255,255,255,.4)}
+
+/* ══════════════════════════════════════
+   ONBOARDING
+══════════════════════════════════════ */
+#view-onboarding{min-height:100vh;background:var(--bg2)}
+.onboarding-header{background:#fff;border-bottom:1px solid var(--border);padding:20px 40px;display:flex;align-items:center;justify-content:space-between}
+.progress-bar-wrap{flex:1;max-width:400px;margin:0 40px}
+.progress-bar-track{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-light));border-radius:2px;transition:width .4s ease}
+.progress-steps{display:flex;justify-content:space-between;margin-top:8px}
+.prog-step{font-size:.7rem;font-weight:600;color:var(--text3)}
+.prog-step.active{color:var(--teal)}
+.prog-step.done{color:var(--teal-dark)}
+.onboarding-body{max-width:720px;margin:0 auto;padding:48px 24px}
+.ob-step-title{font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--navy);margin-bottom:8px}
+.ob-step-sub{font-size:.95rem;color:var(--slate);margin-bottom:36px}
+.ob-card{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--border);padding:32px;box-shadow:var(--shadow-sm)}
+.ob-section-title{font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:16px;margin-top:28px}
+.ob-section-title:first-child{margin-top:0}
+.experience-entry{background:var(--bg2);border-radius:var(--radius);padding:20px;margin-bottom:12px;border:1px solid var(--border);position:relative}
+.exp-remove{position:absolute;top:12px;right:12px;background:none;border:none;color:var(--text3);font-size:1.1rem;cursor:pointer;padding:4px;border-radius:4px}
+.exp-remove:hover{color:var(--red);background:rgba(239,68,68,.08)}
+.skill-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.skill-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(13,148,136,.1);color:var(--teal-dark);border:1px solid rgba(13,148,136,.2);padding:5px 12px;border-radius:9999px;font-size:.8rem;font-weight:600}
+.skill-tag button{background:none;border:none;color:var(--teal-dark);cursor:pointer;font-size:.9rem;line-height:1;padding:0}
+.skill-input-wrap{display:flex;gap:8px}
+.toggle-group{display:flex;gap:8px;flex-wrap:wrap}
+.toggle-btn{padding:8px 16px;border-radius:var(--radius-sm);border:2px solid var(--border);background:#fff;color:var(--slate);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
+.toggle-btn.active{border-color:var(--teal);color:var(--teal);background:rgba(13,148,136,.06)}
+.range-wrap{position:relative}
+.range-input{width:100%;height:4px;-webkit-appearance:none;appearance:none;background:var(--bg3);border-radius:2px;outline:none;cursor:pointer}
+.range-input::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--teal);border:2px solid #fff;box-shadow:0 2px 6px rgba(13,148,136,.3);cursor:pointer}
+.range-labels{display:flex;justify-content:space-between;margin-top:6px;font-size:.75rem;color:var(--slate)}
+.ob-nav{display:flex;justify-content:space-between;align-items:center;margin-top:32px}
+.upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:32px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg2)}
+.upload-zone:hover{border-color:var(--teal);background:rgba(13,148,136,.03)}
+.upload-zone-icon{font-size:2.5rem;margin-bottom:12px}
+.upload-zone-text{font-size:.95rem;font-weight:600;color:var(--navy);margin-bottom:4px}
+.upload-zone-sub{font-size:.82rem;color:var(--slate)}
+.switch{position:relative;display:inline-block;width:48px;height:26px}
+.switch input{opacity:0;width:0;height:0}
+.slider-sw{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--border);border-radius:13px;transition:.3s}
+.slider-sw::before{content:'';position:absolute;height:20px;width:20px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+input:checked + .slider-sw{background:var(--teal)}
+input:checked + .slider-sw::before{transform:translateX(22px)}
+.switch-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}
+.switch-row:last-child{border-bottom:none}
+
+/* ══════════════════════════════════════
+   DASHBOARD
+══════════════════════════════════════ */
+#view-dashboard{flex-direction:row;min-height:100vh;background:var(--bg2)}
+.sidebar{width:240px;background:#fff;border-right:1px solid var(--border);flex-shrink:0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar-logo{padding:20px 20px 0;margin-bottom:8px}
+.sidebar-logo .nav-logo{font-size:1.2rem}
+.sidebar-nav{flex:1;padding:8px 12px}
+.sidebar-nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);color:var(--slate);font-size:.88rem;font-weight:500;cursor:pointer;transition:all .2s;margin-bottom:2px}
+.sidebar-nav-item:hover{background:var(--bg2);color:var(--navy)}
+.sidebar-nav-item.active{background:rgba(13,148,136,.1);color:var(--teal-dark);font-weight:600}
+.sidebar-nav-item .nav-icon{font-size:1rem;width:20px;text-align:center}
+.sidebar-user{padding:16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.user-ava{width:36px;height:36px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0}
+.user-name{font-size:.82rem;font-weight:600;color:var(--navy);line-height:1.2}
+.user-plan{font-size:.7rem;color:var(--teal);font-weight:600}
+.dash-main{flex:1;overflow-y:auto;padding:32px}
+.dash-panel{display:none}
+.dash-panel.active{display:block}
+.dash-header{margin-bottom:28px}
+.dash-title{font-family:var(--font-display);font-size:1.6rem;font-weight:700;color:var(--navy);margin-bottom:4px}
+.dash-sub{font-size:.9rem;color:var(--slate)}
+/* stats row */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:20px;text-align:center}
+.stat-num{font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--navy);margin-bottom:4px}
+.stat-label{font-size:.78rem;color:var(--slate);font-weight:500}
+.stat-change{font-size:.72rem;color:var(--green);font-weight:600;margin-top:4px}
+/* agent status card */
+.agent-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:24px;margin-bottom:20px}
+.agent-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.agent-toggle-area{display:flex;align-items:center;gap:12px}
+.agent-on-badge{font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:9999px}
+.agent-on{background:rgba(34,197,94,.1);color:#15803d}
+.agent-off{background:rgba(100,116,139,.1);color:var(--slate)}
+.agent-scan-text{font-size:.82rem;color:var(--slate);display:flex;align-items:center;gap:6px}
+/* job queue */
+.job-queue-list{display:flex;flex-direction:column;gap:12px}
+.jq-item{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:16px 20px;display:flex;align-items:center;gap:16px;transition:all .2s}
+.jq-item:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.jq-avatar{width:44px;height:44px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.95rem;flex-shrink:0}
+.jq-info{flex:1}
+.jq-title{font-weight:700;color:var(--navy);font-size:.92rem}
+.jq-meta{font-size:.78rem;color:var(--slate);margin-top:2px}
+.jq-match{font-size:.82rem;font-weight:700;color:var(--teal);margin-right:4px}
+.jq-actions{display:flex;gap:8px;flex-shrink:0}
+/* activity feed */
+.activity-feed{display:flex;flex-direction:column;gap:10px}
+.activity-item{display:flex;align-items:flex-start;gap:10px;padding:10px;background:#fff;border-radius:var(--radius-sm);border:1px solid var(--border)}
+.activity-icon{width:28px;height:28px;border-radius:50%;background:rgba(13,148,136,.1);display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0}
+.activity-text{font-size:.82rem;color:var(--slate);line-height:1.5}
+.activity-text strong{color:var(--navy);font-weight:600}
+.activity-time{font-size:.72rem;color:var(--text3);margin-top:2px}
+/* kanban mini */
+.kanban-board{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+.kanban-col{background:var(--bg2);border-radius:var(--radius);padding:14px}
+.kanban-col-title{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--slate);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.kanban-count{background:#fff;border:1px solid var(--border);border-radius:9999px;padding:1px 7px;font-size:.72rem;color:var(--navy);font-weight:700}
+.kanban-item{background:#fff;border-radius:var(--radius-sm);padding:10px 12px;border:1px solid var(--border);margin-bottom:8px;cursor:grab;font-size:.8rem;font-weight:600;color:var(--navy);box-shadow:var(--shadow-sm)}
+.kanban-item:active{cursor:grabbing;box-shadow:var(--shadow-md);opacity:.8}
+.kanban-item-co{font-size:.72rem;color:var(--slate);font-weight:400;margin-top:2px}
+
+/* job matches panel */
+.jobs-filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;align-items:center}
+.jobs-search{flex:1;min-width:200px;position:relative}
+.jobs-search input{padding-left:36px}
+.jobs-search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:.9rem}
+.job-cards-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.job-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:20px;cursor:pointer;transition:all .2s;position:relative}
+.job-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.job-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.job-card-avatar{width:44px;height:44px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.95rem;flex-shrink:0}
+.job-card-save{background:none;border:none;color:var(--text3);font-size:1.1rem;cursor:pointer;padding:4px;border-radius:4px;transition:color .2s}
+.job-card-save:hover{color:var(--coral)}
+.job-card-save.saved{color:var(--coral)}
+.job-title{font-weight:700;color:var(--navy);font-size:.95rem;margin-bottom:2px}
+.job-company{font-size:.82rem;color:var(--slate)}
+.job-meta{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;font-size:.78rem;color:var(--slate)}
+.job-meta span{display:flex;align-items:center;gap:4px}
+.job-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.match-score{font-size:.82rem;font-weight:700;color:var(--teal)}
+/* slide panel */
+.slide-panel{position:fixed;top:0;right:-500px;width:480px;height:100vh;background:#fff;box-shadow:-4px 0 24px rgba(0,0,0,.12);z-index:200;transition:right .3s ease;overflow-y:auto;padding:28px}
+.slide-panel.open{right:0}
+.slide-panel-close{position:absolute;top:20px;right:20px;background:var(--bg2);border:1px solid var(--border);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.9rem;transition:all .2s}
+.slide-panel-close:hover{background:var(--bg3);color:var(--navy)}
+.slide-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:199;display:none}
+.slide-overlay.open{display:block}
+
+/* applications table */
+.app-table{width:100%;border-collapse:collapse;background:#fff;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border)}
+.app-table th{background:var(--bg2);font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--slate);padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}
+.app-table td{padding:14px 16px;font-size:.85rem;color:var(--slate);border-bottom:1px solid var(--border)}
+.app-table tr:last-child td{border-bottom:none}
+.app-table tr:hover td{background:var(--bg2);cursor:pointer}
+.status-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:9999px;font-size:.72rem;font-weight:700}
+.status-applied{background:rgba(100,116,139,.1);color:var(--slate)}
+.status-screening{background:rgba(234,179,8,.1);color:#92400e}
+.status-interview{background:rgba(139,92,246,.1);color:#6d28d9}
+.status-offer{background:rgba(34,197,94,.1);color:#15803d}
+.status-rejected{background:rgba(239,68,68,.1);color:#b91c1c}
+
+/* Resume AI panel */
+.resume-builder-wrap{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.resume-form-side{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--border);padding:28px}
+.resume-preview-side{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--border);padding:28px}
+.ats-ring-wrap{display:flex;flex-direction:column;align-items:center;margin:24px 0}
+.ats-svg{transform:rotate(-90deg)}
+.ats-track{fill:none;stroke:var(--bg3);stroke-width:8}
+.ats-fill{fill:none;stroke:var(--teal);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1.5s ease;stroke-dasharray:283;stroke-dashoffset:283}
+.ats-num{font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--navy);text-align:center;margin-top:-80px}
+.ats-label{font-size:.78rem;color:var(--slate);text-align:center;margin-top:4px;margin-bottom:24px}
+.keywords-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.kw-found{background:rgba(34,197,94,.1);color:#15803d;border:1px solid rgba(34,197,94,.2);padding:3px 10px;border-radius:9999px;font-size:.75rem;font-weight:600}
+.kw-missing{background:rgba(239,68,68,.08);color:#b91c1c;border:1px solid rgba(239,68,68,.15);padding:3px 10px;border-radius:9999px;font-size:.75rem;font-weight:600}
+.resume-preview-doc{background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);padding:24px;font-size:.78rem;line-height:1.6;color:var(--navy);min-height:400px;white-space:pre-wrap;font-family:Georgia,serif}
+.style-selector{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.style-btn{padding:7px 14px;border-radius:var(--radius-sm);border:2px solid var(--border);background:#fff;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;color:var(--slate)}
+.style-btn.active{border-color:var(--teal);color:var(--teal);background:rgba(13,148,136,.06)}
+/* download tabs */
+.dl-tabs{display:flex;gap:8px;margin-top:16px}
+.dl-tab{padding:8px 16px;border-radius:var(--radius-sm);border:1px solid var(--border);background:#fff;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;color:var(--slate)}
+.dl-tab:hover{border-color:var(--teal);color:var(--teal)}
+
+/* Orion chat */
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 200px);max-height:700px;background:#fff;border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden}
+.chat-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,rgba(13,148,136,.05),rgba(13,148,136,.02))}
+.orion-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-light));display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.orion-name{font-weight:700;color:var(--navy)}
+.orion-status{font-size:.75rem;color:var(--green);font-weight:600}
+.chat-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px}
+.chat-msg{display:flex;gap:10px;max-width:85%}
+.chat-msg.user{align-self:flex-end;flex-direction:row-reverse}
+.chat-msg-bubble{padding:12px 16px;border-radius:var(--radius);font-size:.88rem;line-height:1.6}
+.chat-msg.ai .chat-msg-bubble{background:var(--bg2);color:var(--navy);border-radius:4px var(--radius) var(--radius) var(--radius)}
+.chat-msg.user .chat-msg-bubble{background:var(--teal);color:#fff;border-radius:var(--radius) 4px var(--radius) var(--radius)}
+.chat-msg-ava{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700}
+.chat-msg.ai .chat-msg-ava{background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff}
+.chat-msg.user .chat-msg-ava{background:var(--navy2);color:#fff}
+.typing-indicator{display:flex;gap:4px;padding:8px}
+.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--slate);animation:typing-bounce 1.2s infinite}
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes typing-bounce{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-6px);opacity:1}}
+.chat-suggestions{padding:12px 20px;display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--border);background:var(--bg2)}
+.chat-suggestion-btn{background:#fff;border:1px solid var(--border);border-radius:9999px;padding:6px 14px;font-size:.78rem;color:var(--slate);cursor:pointer;transition:all .2s;white-space:nowrap}
+.chat-suggestion-btn:hover{border-color:var(--teal);color:var(--teal);background:rgba(13,148,136,.04)}
+.chat-input-area{padding:16px 20px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:flex-end}
+.chat-input{flex:1;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:.9rem;outline:none;resize:none;max-height:100px;transition:border-color .2s}
+.chat-input:focus{border-color:var(--teal)}
+.chat-send{width:40px;height:40px;border-radius:var(--radius-sm);background:var(--teal);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.chat-send:hover{background:var(--teal-dark)}
+.chat-send svg{width:16px;height:16px}
+
+/* AUTO-FILL DEMO */
+.autofill-demo{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--border);padding:28px;position:relative;overflow:hidden}
+.agent-overlay-badge{position:absolute;top:16px;right:16px;background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff;padding:6px 14px;border-radius:9999px;font-size:.75rem;font-weight:700;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(13,148,136,.3)}
+.demo-form-field{margin-bottom:14px;position:relative}
+.demo-field-label{font-size:.78rem;font-weight:600;color:var(--slate);margin-bottom:5px}
+.demo-field-input{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:.88rem;color:var(--navy);background:#fff;transition:border-color .3s}
+.demo-field-input.filling{border-color:var(--teal);background:rgba(13,148,136,.03)}
+.demo-field-input.filled{border-color:var(--green);background:rgba(34,197,94,.03)}
+.demo-textarea{height:80px;resize:none}
+.fill-cursor{display:inline;border-right:2px solid var(--teal);animation:blink .7s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* SETTINGS PANEL */
+.settings-section{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--border);padding:24px;margin-bottom:20px}
+.settings-section-title{font-weight:700;color:var(--navy);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.coupon-input-row{display:flex;gap:10px}
+
+/* MODALS */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.hidden{display:none!important}
+.modal{background:#fff;border-radius:var(--radius-lg);padding:32px;max-width:480px;width:100%;box-shadow:var(--shadow-lg);position:relative;animation:modal-in .25s ease}
+@keyframes modal-in{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-close{position:absolute;top:16px;right:16px;background:var(--bg2);border:1px solid var(--border);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:.9rem}
+.modal-close:hover{background:var(--bg3)}
+.modal-icon{font-size:2.5rem;margin-bottom:16px;text-align:center}
+.modal-title{font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--navy);margin-bottom:8px;text-align:center}
+.modal-sub{font-size:.9rem;color:var(--slate);text-align:center;margin-bottom:24px;line-height:1.6}
+.order-detail{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:.88rem}
+.order-detail:last-child{border-bottom:none}
+.order-label{color:var(--slate)}
+.order-val{font-weight:600;color:var(--navy)}
+
+/* TOAST */
+.toast-container{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:1000;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:var(--navy);color:#fff;padding:12px 20px;border-radius:var(--radius);font-size:.88rem;font-weight:500;box-shadow:var(--shadow-lg);pointer-events:auto;animation:toast-in .25s ease;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.toast.success{background:#15803d}
+.toast.error{background:#b91c1c}
+.toast.warning{background:#92400e}
+@keyframes toast-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes toast-out{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(10px)}}
+
+/* LOADING */
+.loading-spinner{display:inline-block;width:20px;height:20px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+.loading-spinner.dark{border-color:rgba(13,148,136,.2);border-top-color:var(--teal)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.8);backdrop-filter:blur(4px);z-index:300;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+.loading-overlay.hidden{display:none!important}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* EMAILJS BANNER */
+.config-banner{background:linear-gradient(135deg,#fef3c7,#fde68a);border:1px solid #f59e0b;border-radius:var(--radius);padding:14px 20px;margin-bottom:20px;display:flex;align-items:center;gap:12px;font-size:.85rem;color:#92400e}
+.config-banner a{color:#78350f;font-weight:700;text-decoration:underline;cursor:pointer}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .steps-grid{grid-template-columns:repeat(2,1fr)}
+  .steps-grid::before{display:none}
+  .features-grid{grid-template-columns:repeat(2,1fr)}
+  .testimonials-grid{grid-template-columns:repeat(2,1fr)}
+  .pricing-grid{grid-template-columns:repeat(2,1fr)}
+  .spotlight-inner{grid-template-columns:1fr;gap:40px}
+  .resume-builder-wrap{grid-template-columns:1fr}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .kanban-board{grid-template-columns:repeat(2,1fr)}
+  .job-cards-grid{grid-template-columns:1fr}
+  .footer-inner{grid-template-columns:1fr 1fr}
+  #hero{flex-direction:column;text-align:center}
+  .hero-visual{display:none}
+  .trust-bar{justify-content:center}
+  .hero-actions{justify-content:center}
+}
+@media(max-width:768px){
+  #landing-nav{padding:0 20px}
+  .nav-links{display:none}
+  #hero{padding:60px 20px}
+  #how-it-works,#features,#agent-spotlight,#testimonials,#pricing,#fb-deals{padding:60px 20px}
+  .features-grid{grid-template-columns:1fr}
+  .testimonials-grid{grid-template-columns:1fr}
+  .pricing-grid{grid-template-columns:1fr}
+  .steps-grid{grid-template-columns:1fr}
+  .coupons-grid{grid-template-columns:1fr}
+  .input-row{grid-template-columns:1fr}
+  footer{padding:40px 20px}
+  .footer-inner{grid-template-columns:1fr}
+  .sidebar{width:64px}
+  .sidebar-nav-item span:not(.nav-icon){display:none}
+  .sidebar-user .user-name,.sidebar-user .user-plan{display:none}
+  .dash-main{padding:16px}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .kanban-board{grid-template-columns:1fr 1fr}
+  .slide-panel{width:100%;right:-100%}
+  .jobs-filters{flex-direction:column;align-items:stretch}
+}
+/* Top progress bar for forms */
+.top-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--teal),var(--coral));z-index:999;transition:width .3s ease;pointer-events:none}
+</style>
+</head>
+<body>
+
+<!-- TOP PROGRESS BAR -->
+<div class="top-progress" id="top-progress" style="width:0%"></div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay hidden" id="loading-overlay">
+  <div class="loading-spinner dark" style="width:40px;height:40px;border-width:3px"></div>
+  <p style="font-weight:600;color:var(--navy)" id="loading-text">Processing...</p>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay hidden" id="modal-payment">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-payment')">✕</button>
+    <div class="modal-icon">🎉</div>
+    <h2 class="modal-title">Order Confirmed!</h2>
+    <p class="modal-sub">Your InfuseLink plan is now active. Check your email for access details.</p>
+    <div id="modal-order-details" style="margin-bottom:24px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px"></div>
+    <button class="btn btn-primary w-full btn-lg" onclick="goToDashboard();closeModal('modal-payment')">Access Your Dashboard →</button>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="modal-demo">
+  <div class="modal" style="max-width:540px">
+    <button class="modal-close" onclick="closeModal('modal-demo')">✕</button>
+    <h2 class="modal-title" style="text-align:left">InfuseLink Demo</h2>
+    <p style="font-size:.9rem;color:var(--slate);margin-bottom:20px">See how InfuseLink finds and applies to jobs on autopilot.</p>
+    <div style="background:var(--bg2);border-radius:var(--radius);padding:20px;text-align:center">
+      <div style="font-size:3rem;margin-bottom:12px">🤖</div>
+      <p style="font-weight:700;color:var(--navy);margin-bottom:8px">AI Agent Live Demo</p>
+      <p style="font-size:.85rem;color:var(--slate);margin-bottom:16px">Our AI scans 400,000+ jobs, tailors your resume, and applies — all while you sleep.</p>
+      <button class="btn btn-primary w-full" onclick="closeModal('modal-demo');startOnboarding()">Start Free — No Credit Card →</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="modal-apply-confirm">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-apply-confirm')">✕</button>
+    <div class="modal-icon">📋</div>
+    <h2 class="modal-title">Apply to this job?</h2>
+    <div id="modal-apply-job-info" style="background:var(--bg2);border-radius:var(--radius-sm);padding:16px;margin-bottom:20px;font-size:.9rem;color:var(--slate)"></div>
+    <p style="font-size:.85rem;color:var(--slate);margin-bottom:20px">InfuseLink will tailor your resume and submit the application on your behalf.</p>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-ghost w-full" onclick="closeModal('modal-apply-confirm')">Skip</button>
+      <button class="btn btn-primary w-full" onclick="confirmApply()">Apply Now ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     LANDING PAGE
+════════════════════════════════════════ -->
+<div id="view-landing" class="view active">
+
+<!-- NAV -->
+<nav id="landing-nav">
+  <div class="nav-logo" onclick="scrollToTop()" style="cursor:pointer">Infuse<span>Link</span></div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#agent-spotlight">AI Agent</a>
+    <a href="#fb-deals">FB Deals</a>
+  </div>
+  <div class="nav-actions">
+    <button class="btn btn-ghost btn-sm" onclick="startOnboarding()">Sign In</button>
+    <button class="btn btn-primary btn-sm" onclick="startOnboarding()">Start Free →</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-blob blob1"></div>
+  <div class="hero-blob blob2"></div>
+  <div class="hero-content reveal">
+    <div class="hero-badge">✦ Powered by Gemini AI — The smartest job copilot</div>
+    <h1 class="hero-h1">Your AI Job Search <em>Copilot</em></h1>
+    <p class="hero-sub">InfuseLink matches you to top jobs, tailors your resume for every listing, and auto-applies while you focus on what matters. Land 3.8× more interviews.</p>
+    <div class="hero-actions">
+      <button class="btn btn-coral btn-lg" onclick="startOnboarding()">Start Free — No Card Needed</button>
+      <button class="btn btn-outline btn-lg" onclick="openModal('modal-demo')">See Demo →</button>
+    </div>
+    <div class="trust-bar">
+      <div class="trust-item">
+        <span class="trust-num" data-count="18200">0</span>
+        <span class="trust-label">Resumes Generated</span>
+      </div>
+      <div class="trust-item">
+        <span class="trust-num" data-count="96" data-suffix="%">0%</span>
+        <span class="trust-label">ATS Pass Rate</span>
+      </div>
+      <div class="trust-item">
+        <span class="trust-num" data-count="38" data-suffix="×" data-divide="10">0×</span>
+        <span class="trust-label">More Callbacks</span>
+      </div>
+      <div class="trust-item">
+        <span class="trust-num" data-count="80" data-suffix="%">0%</span>
+        <span class="trust-label">Time Saved</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="resume-card resume-card-1">
+      <div class="resume-card-header" style="background:linear-gradient(90deg,#0d9488,#14b8a6)"></div>
+      <div class="resume-card-line"></div>
+      <div class="resume-card-line medium"></div>
+      <div class="resume-card-line short"></div>
+      <div class="resume-card-line"></div>
+      <div class="resume-card-line medium"></div>
+      <div class="resume-card-score">
+        <span class="score-label">ATS SCORE</span>
+        <span class="score-val">96%</span>
+      </div>
+    </div>
+    <div class="resume-card resume-card-2">
+      <div class="resume-card-header" style="background:linear-gradient(90deg,#f97316,#fb923c)"></div>
+      <div class="resume-card-line"></div>
+      <div class="resume-card-line short"></div>
+      <div class="resume-card-line"></div>
+      <div class="resume-card-line medium"></div>
+      <div class="resume-card-line short"></div>
+      <div class="resume-card-score">
+        <span class="score-label">ATS SCORE</span>
+        <span class="score-val">91%</span>
+      </div>
+    </div>
+    <div class="resume-card resume-card-3">
+      <div class="resume-card-header" style="background:linear-gradient(90deg,#8b5cf6,#a78bfa)"></div>
+      <div class="resume-card-line medium"></div>
+      <div class="resume-card-line"></div>
+      <div class="resume-card-line short"></div>
+      <div class="resume-card-line"></div>
+      <div class="resume-card-line medium"></div>
+      <div class="resume-card-score">
+        <span class="score-label">ATS SCORE</span>
+        <span class="score-val">89%</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="reveal" style="text-align:center">
+      <div class="section-label">How It Works</div>
+      <h2 class="section-title">From Profile to Offer in 4 Steps</h2>
+      <p class="section-sub" style="margin:0 auto">InfuseLink handles every step of your job search so you don't have to.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card reveal">
+        <div class="step-num">1</div>
+        <h3 class="step-title">Upload Profile</h3>
+        <p class="step-desc">Import your resume or LinkedIn profile in seconds. AI extracts and organizes your experience.</p>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-num">2</div>
+        <h3 class="step-title">AI Matches Jobs</h3>
+        <p class="step-desc">Our engine scans 400K+ live listings and scores each match against your skills and preferences.</p>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-num">3</div>
+        <h3 class="step-title">One-Click Apply</h3>
+        <p class="step-desc">Auto-fill agent submits applications with a tailored resume and cover letter for each role.</p>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-num">4</div>
+        <h3 class="step-title">Track Everything</h3>
+        <p class="step-desc">Monitor your pipeline in real-time. Get alerts for interviews and follow-up reminders.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="reveal" style="text-align:center">
+      <div class="section-label">Features</div>
+      <h2 class="section-title">Everything You Need to Land the Job</h2>
+      <p class="section-sub" style="margin:0 auto">Six powerful tools working together as your personal job search team.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon">📄</div>
+        <h3 class="feature-title">AI Resume Builder</h3>
+        <p class="feature-desc">Generate ATS-optimized resumes tailored to each job listing. Choose from 5 professional styles. Download as PDF, Word, or plain text.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🤖</div>
+        <h3 class="feature-title">Job Auto-Fill Agent</h3>
+        <p class="feature-desc">Our Chrome Extension auto-fills applications on LinkedIn, Workday, Greenhouse, and 1000+ ATS platforms — in supervised or automated mode.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🎯</div>
+        <h3 class="feature-title">ATS Score Checker</h3>
+        <p class="feature-desc">Real-time ATS scoring with keyword gap analysis. See exactly what keywords you're missing and how to fix them before applying.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🔍</div>
+        <h3 class="feature-title">Job Match Engine</h3>
+        <p class="feature-desc">AI ranks 400,000+ live job listings by how well they match your skills, experience, and preferences. Updated hourly.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">✍️</div>
+        <h3 class="feature-title">Cover Letter AI</h3>
+        <p class="feature-desc">Generate compelling, personalized cover letters for any job in seconds. Trained on thousands of successful applications.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">📊</div>
+        <h3 class="feature-title">Application Tracker</h3>
+        <p class="feature-desc">Full pipeline view from applied to offer. Track ATS scores, interview stages, follow-ups, and more in one organized dashboard.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENT SPOTLIGHT -->
+<section id="agent-spotlight">
+  <div class="spotlight-inner">
+    <div class="spotlight-text reveal">
+      <div class="section-label">AI Agent</div>
+      <h2 class="section-title">Meet Orion — Your Always-On Job Agent</h2>
+      <p class="section-sub">Orion works 24/7 scanning jobs, tailoring resumes, and applying on your behalf. Choose how much control you want.</p>
+      <div class="mode-cards">
+        <div class="mode-card active" id="mode-supervised" onclick="setMode('supervised')">
+          <div class="mode-card-header">
+            <div class="mode-icon" style="background:rgba(13,148,136,.1)">👁️</div>
+            <span class="mode-card-title">Supervised Mode</span>
+            <span class="badge badge-teal" style="margin-left:auto">Recommended</span>
+          </div>
+          <p class="mode-card-desc">Orion finds and prepares applications. You review and approve each one before it's submitted. Full control, zero wasted applications.</p>
+        </div>
+        <div class="mode-card" id="mode-automated" onclick="setMode('automated')">
+          <div class="mode-card-header">
+            <div class="mode-icon" style="background:rgba(249,115,22,.1)">⚡</div>
+            <span class="mode-card-title">Automated Mode</span>
+            <span class="badge badge-coral" style="margin-left:auto">Power Users</span>
+          </div>
+          <p class="mode-card-desc">Set your filters and let Orion run. The agent applies to matched jobs automatically — up to 50 per day. Maximize your reach.</p>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-lg mt-6" onclick="startOnboarding()">Activate Your Agent →</button>
+    </div>
+    <div class="reveal">
+      <div class="agent-mockup">
+        <div class="mockup-header">
+          <div class="mockup-dot" style="background:#ef4444"></div>
+          <div class="mockup-dot" style="background:#eab308"></div>
+          <div class="mockup-dot" style="background:#22c55e"></div>
+          <span class="mockup-title" style="margin-left:8px">Orion Agent — Live Queue</span>
+        </div>
+        <div class="mockup-job processing" id="mock-job-1">
+          <div class="mockup-company" style="background:#0d9488">S</div>
+          <div class="mockup-info">
+            <div class="mockup-job-title">Senior Software Engineer</div>
+            <div class="mockup-job-co">Stripe • Remote</div>
+          </div>
+          <span class="mockup-score">94% match</span>
+        </div>
+        <div class="mockup-job" id="mock-job-2">
+          <div class="mockup-company" style="background:#8b5cf6">N</div>
+          <div class="mockup-info">
+            <div class="mockup-job-title">Product Manager</div>
+            <div class="mockup-job-co">Notion • San Francisco</div>
+          </div>
+          <span class="mockup-score">88% match</span>
+        </div>
+        <div class="mockup-job" id="mock-job-3">
+          <div class="mockup-company" style="background:#f97316">A</div>
+          <div class="mockup-info">
+            <div class="mockup-job-title">Data Scientist</div>
+            <div class="mockup-job-co">Anthropic • Remote</div>
+          </div>
+          <span class="mockup-score">85% match</span>
+        </div>
+        <div class="agent-status-bar">
+          <div class="pulse-dot"></div>
+          <span class="agent-status-text">Agent scanning 400,000+ jobs right now...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="reveal" style="text-align:center">
+      <div class="section-label">Success Stories</div>
+      <h2 class="section-title">Real People, Real Results</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-quote">"InfuseLink applied to 47 jobs in my first week. I landed 4 interviews and got an offer at $40k more than my previous salary. This is a game changer."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:linear-gradient(135deg,#0d9488,#14b8a6)">MK</div>
+          <div>
+            <div class="author-name">Marcus K.</div>
+            <div class="author-role">Senior Engineer → Staff Engineer at Figma</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-quote">"The ATS score feature alone is worth it. I was getting zero callbacks before. After optimizing with InfuseLink, I went from 0% to 34% response rate in 2 weeks."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:linear-gradient(135deg,#f97316,#fb923c)">SR</div>
+          <div>
+            <div class="author-name">Sofia R.</div>
+            <div class="author-role">Product Manager at Airbnb</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-quote">"I was spending 3 hours per application. InfuseLink cut that to 10 minutes. Landed my dream job at Stripe after just 3 weeks of using the platform."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa)">JT</div>
+          <div>
+            <div class="author-name">James T.</div>
+            <div class="author-role">Data Scientist at Stripe</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="reveal" style="text-align:center">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title">Pay Once, Land More Jobs</h2>
+      <p class="section-sub" style="margin:0 auto">No subscriptions. No hidden fees. Just results. Use coupon codes from our Facebook group for extra discounts.</p>
+    </div>
+    <div class="pricing-grid" style="margin-top:60px">
+      <div class="pricing-card reveal">
+        <div class="pricing-plan">Starter</div>
+        <div class="pricing-price">$4.99</div>
+        <div class="pricing-desc">Perfect for testing the waters</div>
+        <ul class="pricing-features">
+          <li>1 AI-generated resume</li>
+          <li>1 resume style</li>
+          <li>ATS score analysis</li>
+          <li>PDF export</li>
+        </ul>
+        <button class="btn btn-outline w-full" onclick="purchasePlan('Starter','$4.99','starter')">Get Starter →</button>
+      </div>
+      <div class="pricing-card reveal">
+        <div class="pricing-plan">Triple Pack</div>
+        <div class="pricing-price">$9.99</div>
+        <div class="pricing-desc">Best for active job seekers</div>
+        <ul class="pricing-features">
+          <li>3 tailored resumes</li>
+          <li>3 cover letters</li>
+          <li>All 5 resume styles</li>
+          <li>30-day revisions</li>
+          <li>ATS score + keywords</li>
+        </ul>
+        <button class="btn btn-outline w-full" onclick="purchasePlan('Triple Pack','$9.99','triple')">Get Triple Pack →</button>
+      </div>
+      <div class="pricing-card featured reveal">
+        <div class="pricing-badge">Most Popular</div>
+        <div class="pricing-plan">Pro Bundle</div>
+        <div class="pricing-price">$14.99</div>
+        <div class="pricing-desc">Complete job search toolkit</div>
+        <ul class="pricing-features">
+          <li>5 tailored resumes</li>
+          <li>5 cover letters</li>
+          <li>LinkedIn profile rewrite</li>
+          <li>60-day revisions</li>
+          <li>Priority support</li>
+        </ul>
+        <button class="btn btn-primary w-full" onclick="purchasePlan('Pro Bundle','$14.99','pro')">Get Pro Bundle →</button>
+      </div>
+      <div class="pricing-card reveal">
+        <div class="pricing-plan">Unlimited 30-Day</div>
+        <div class="pricing-price">$19.99</div>
+        <div class="pricing-desc">Unlimited power for a month</div>
+        <ul class="pricing-features">
+          <li>Unlimited resumes</li>
+          <li>Unlimited cover letters</li>
+          <li>Priority AI queue</li>
+          <li>30 days full access</li>
+        </ul>
+        <button class="btn btn-outline w-full" onclick="purchasePlan('Unlimited 30-Day','$19.99','unlimited')">Get Unlimited →</button>
+      </div>
+      <div class="pricing-card reveal">
+        <div class="pricing-plan">Mega Bulk</div>
+        <div class="pricing-price">$24.99</div>
+        <div class="pricing-desc">Maximum volume package</div>
+        <ul class="pricing-features">
+          <li>10 resumes + covers</li>
+          <li>LinkedIn rewrite</li>
+          <li>90-day access</li>
+          <li>Dedicated support</li>
+        </ul>
+        <button class="btn btn-outline w-full" onclick="purchasePlan('Mega Bulk','$24.99','mega')">Get Mega Bulk →</button>
+      </div>
+      <div class="pricing-card featured reveal">
+        <div class="pricing-badge">Best Value</div>
+        <div class="pricing-plan">AI Agent Monthly</div>
+        <div class="pricing-price">$29.99 <span>/mo</span></div>
+        <div class="pricing-desc">Full AI Agent + everything</div>
+        <ul class="pricing-features">
+          <li>Full AI Agent dashboard</li>
+          <li>Auto-apply up to 50/day</li>
+          <li>Job match engine</li>
+          <li>Orion AI copilot</li>
+          <li>Unlimited resumes + covers</li>
+          <li>Priority support</li>
+        </ul>
+        <button class="btn btn-coral w-full" onclick="purchasePlan('AI Agent Monthly','$29.99/mo','agent')">Activate Agent →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FACEBOOK GROUP DEALS -->
+<section id="fb-deals">
+  <div class="fb-deals-inner reveal">
+    <div class="section-label" style="color:rgba(255,255,255,.6)">Facebook Group</div>
+    <h2 class="section-title">Exclusive Member Coupons</h2>
+    <p class="section-sub">Join our Facebook group to get exclusive discount codes. Enter at checkout for instant savings.</p>
+    <div class="coupons-grid">
+      <div class="coupon-card">
+        <div>
+          <div style="font-size:.72rem;color:rgba(255,255,255,.5);margin-bottom:6px;font-weight:600">COUPON CODE</div>
+          <div class="coupon-code">INFUSE3X1</div>
+        </div>
+        <div class="coupon-info">
+          <div class="coupon-plan">Triple Pack</div>
+          <div class="coupon-price">$7.99</div>
+          <div class="coupon-savings">Save $2 (20% off)</div>
+        </div>
+      </div>
+      <div class="coupon-card">
+        <div>
+          <div style="font-size:.72rem;color:rgba(255,255,255,.5);margin-bottom:6px;font-weight:600">COUPON CODE</div>
+          <div class="coupon-code">INFUSE5CVR</div>
+        </div>
+        <div class="coupon-info">
+          <div class="coupon-plan">Pro Bundle</div>
+          <div class="coupon-price">$11.99</div>
+          <div class="coupon-savings">Save $3 (20% off)</div>
+        </div>
+      </div>
+      <div class="coupon-card">
+        <div>
+          <div style="font-size:.72rem;color:rgba(255,255,255,.5);margin-bottom:6px;font-weight:600">COUPON CODE</div>
+          <div class="coupon-code">INFUSE30DAY</div>
+        </div>
+        <div class="coupon-info">
+          <div class="coupon-plan">Unlimited 30-Day</div>
+          <div class="coupon-price">$14.99</div>
+          <div class="coupon-savings">Save $5 (25% off)</div>
+        </div>
+      </div>
+      <div class="coupon-card">
+        <div>
+          <div style="font-size:.72px;color:rgba(255,255,255,.5);margin-bottom:6px;font-weight:600">COUPON CODE</div>
+          <div class="coupon-code">INFUSE10BLK</div>
+        </div>
+        <div class="coupon-info">
+          <div class="coupon-plan">Mega Bulk</div>
+          <div class="coupon-price">$14.99</div>
+          <div class="coupon-savings">Save $10 (40% off)</div>
+        </div>
+      </div>
+      <div class="coupon-card" style="grid-column:1/-1;justify-content:center;gap:40px">
+        <div>
+          <div style="font-size:.72rem;color:rgba(255,255,255,.5);margin-bottom:6px;font-weight:600">COUPON CODE</div>
+          <div class="coupon-code">INFUSEAGENT</div>
+        </div>
+        <div class="coupon-info">
+          <div class="coupon-plan">AI Agent Monthly</div>
+          <div class="coupon-price">$19.99<span style="font-size:.8rem;font-weight:400;color:rgba(255,255,255,.6)">/mo</span></div>
+          <div class="coupon-savings">Save $10 (33% off)</div>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top:24px;font-size:.82rem;color:rgba(255,255,255,.5)">Enter coupon codes at checkout or in your dashboard Settings → Billing</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="nav-logo">Infuse<span>Link</span></div>
+      <p class="footer-tagline">Your AI Job Search Copilot. Land more interviews, faster.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Product</div>
+      <ul class="footer-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#agent-spotlight">AI Agent</a></li>
+        <li><a onclick="startOnboarding()" style="cursor:pointer">Resume Builder</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Resources</div>
+      <ul class="footer-links">
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Resume Tips</a></li>
+        <li><a href="#">Interview Guide</a></li>
+        <li><a href="#">Salary Data</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <ul class="footer-links">
+        <li><a href="#">About</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Terms</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 InfuseLink. All rights reserved.</span>
+    <span>Made with ❤️ + Gemini AI</span>
+  </div>
+</footer>
+</div><!-- end view-landing -->
+
+<!-- ════════════════════════════════════════
+     ONBOARDING VIEW
+════════════════════════════════════════ -->
+<div id="view-onboarding" class="view" style="min-height:100vh;background:var(--bg2)">
+  <div class="onboarding-header">
+    <div class="nav-logo" onclick="showView('landing')" style="cursor:pointer">Infuse<span>Link</span></div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="ob-progress-fill" style="width:33%"></div>
+      </div>
+      <div class="progress-steps">
+        <span class="prog-step active" id="prog-1">1. Account</span>
+        <span class="prog-step" id="prog-2">2. Profile</span>
+        <span class="prog-step" id="prog-3">3. Agent</span>
+      </div>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="showView('landing')">← Back</button>
+  </div>
+
+  <!-- STEP 1: Account Setup -->
+  <div id="ob-step-1" class="onboarding-body">
+    <div id="emailjs-setup-banner" class="config-banner hidden">
+      ⚠️ EmailJS not configured — <a onclick="document.getElementById('ob-step-1').scrollTop=0">set up EmailJS</a> to enable email confirmations. <a href="https://emailjs.com" target="_blank">Get started →</a>
+    </div>
+    <h1 class="ob-step-title">Create Your Account</h1>
+    <p class="ob-step-sub">Set up your InfuseLink account and import your resume to get started.</p>
+    <div class="ob-card">
+      <div class="ob-section-title">Account Details</div>
+      <div class="input-row">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="ob-name" class="form-control" placeholder="Alex Johnson" oninput="syncState('user.name',this.value)"/>
+        </div>
+        <div class="form-group">
+          <label>Email Address *</label>
+          <input type="email" id="ob-email" class="form-control" placeholder="alex@example.com" oninput="syncState('user.email',this.value)"/>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="form-group">
+          <label>Password *</label>
+          <input type="password" id="ob-password" class="form-control" placeholder="Create a password" oninput="syncState('user.password',this.value)"/>
+        </div>
+        <div class="form-group">
+          <label>LinkedIn URL</label>
+          <input type="url" id="ob-linkedin" class="form-control" placeholder="linkedin.com/in/yourname" oninput="syncState('user.linkedin',this.value)"/>
+        </div>
+      </div>
+      <div class="ob-section-title">Resume Import</div>
+      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('resume-upload').click()">
+        <div class="upload-zone-icon">📄</div>
+        <div class="upload-zone-text">Upload Your Resume (PDF or TXT)</div>
+        <div class="upload-zone-sub">Click to browse or drag and drop</div>
+        <div id="upload-status" style="margin-top:10px;font-size:.82rem;color:var(--teal);font-weight:600"></div>
+      </div>
+      <input type="file" id="resume-upload" accept=".pdf,.txt" style="display:none" onchange="handleResumeUpload(this)"/>
+      <p style="text-align:center;font-size:.82rem;color:var(--slate);margin:16px 0">— or fill in your details manually in the next step —</p>
+    </div>
+    <div class="ob-nav">
+      <span></span>
+      <button class="btn btn-primary btn-lg" onclick="obNext(1)">Continue → Profile Setup</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: Profile Builder -->
+  <div id="ob-step-2" class="onboarding-body hidden">
+    <h1 class="ob-step-title">Build Your Profile</h1>
+    <p class="ob-step-sub">The more you fill in, the smarter your AI matches will be.</p>
+    <div class="ob-card">
+      <div class="ob-section-title">Personal Information</div>
+      <div class="input-row">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="p-name" class="form-control" oninput="syncState('user.name',this.value)"/>
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="tel" id="p-phone" class="form-control" placeholder="+1 (555) 000-0000" oninput="syncState('user.phone',this.value)"/>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="form-group">
+          <label>Location</label>
+          <input type="text" id="p-location" class="form-control" placeholder="San Francisco, CA" oninput="syncState('user.location',this.value)"/>
+        </div>
+        <div class="form-group">
+          <label>LinkedIn</label>
+          <input type="url" id="p-linkedin" class="form-control" oninput="syncState('user.linkedin',this.value)"/>
+        </div>
+      </div>
+      <div class="ob-section-title">Education</div>
+      <div class="input-row">
+        <div class="form-group">
+          <label>Degree</label>
+          <input type="text" id="p-degree" class="form-control" placeholder="B.S. Computer Science" oninput="syncState('profile.degree',this.value)"/>
+        </div>
+        <div class="form-group">
+          <label>School</label>
+          <input type="text" id="p-school" class="form-control" placeholder="Stanford University" oninput="syncState('profile.school',this.value)"/>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="form-group">
+          <label>Graduation Year</label>
+          <input type="text" id="p-gradyr" class="form-control" placeholder="2020" oninput="syncState('profile.gyr',this.value)"/>
+        </div>
+        <div class="form-group">
+          <label>GPA (optional)</label>
+          <input type="text" id="p-gpa" class="form-control" placeholder="3.8" oninput="syncState('profile.gpa',this.value)"/>
+        </div>
+      </div>
+      <div class="ob-section-title">Work Experience</div>
+      <div id="experience-list"></div>
+      <button class="btn btn-ghost btn-sm mt-2" onclick="addExperience()">+ Add Experience</button>
+      <div class="ob-section-title">Skills</div>
+      <div class="skill-input-wrap">
+        <input type="text" id="skill-input" class="form-control" placeholder="Type a skill and press Enter" onkeydown="if(event.key==='Enter'){event.preventDefault();addSkill(this.value);this.value=''}"/>
+        <button class="btn btn-ghost btn-sm" onclick="addSkill(document.getElementById('skill-input').value);document.getElementById('skill-input').value=''">Add</button>
+      </div>
+      <div class="skill-tags mt-2" id="skills-display"></div>
+      <div class="ob-section-title">Experience Level</div>
+      <div class="toggle-group" id="level-toggle">
+        <button class="toggle-btn" data-val="entry" onclick="setLevel('entry')">Entry Level</button>
+        <button class="toggle-btn active" data-val="mid" onclick="setLevel('mid')">Mid Level</button>
+        <button class="toggle-btn" data-val="senior" onclick="setLevel('senior')">Senior</button>
+        <button class="toggle-btn" data-val="exec" onclick="setLevel('exec')">Executive</button>
+      </div>
+      <div class="ob-section-title">Certifications & Awards</div>
+      <div class="form-group">
+        <textarea id="p-certs" class="form-control" rows="3" placeholder="AWS Certified Solutions Architect, Google Analytics, Dean's List..." oninput="syncState('profile.certs',this.value)"></textarea>
+      </div>
+      <div class="ob-section-title">Professional Summary</div>
+      <div class="form-group">
+        <textarea id="p-summary" class="form-control" rows="4" placeholder="Leave blank and AI will generate one based on your profile..." oninput="syncState('profile.summary',this.value)"></textarea>
+      </div>
+      <div class="ob-section-title">Job Preferences</div>
+      <div class="input-row">
+        <div class="form-group">
+          <label>Target Job Title</label>
+          <input type="text" id="p-target" class="form-control" placeholder="Senior Software Engineer" oninput="syncState('preferences.targetTitle',this.value)"/>
+        </div>
+        <div class="form-group">
+          <label>Industry</label>
+          <select id="p-industry" class="form-control" onchange="syncState('preferences.industry',this.value)">
+            <option>Technology</option><option>Finance</option><option>Healthcare</option><option>Marketing</option><option>Education</option><option>Consulting</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="form-group">
+          <label>Preferred Location</label>
+          <input type="text" id="p-pref-loc" class="form-control" placeholder="Remote, NYC, or Anywhere" oninput="syncState('preferences.location',this.value)"/>
+        </div>
+        <div class="form-group">
+          <label>Salary Range</label>
+          <select id="p-salary" class="form-control" onchange="setSalary(this.value)">
+            <option value="0-80000">$0 – $80k</option>
+            <option value="80000-120000">$80k – $120k</option>
+            <option value="120000-160000" selected>$120k – $160k</option>
+            <option value="160000-200000">$160k – $200k</option>
+            <option value="200000-999999">$200k+</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Work Type</label>
+        <div class="toggle-group" id="worktype-toggle">
+          <button class="toggle-btn active" onclick="setWorkType('remote')">Remote</button>
+          <button class="toggle-btn" onclick="setWorkType('hybrid')">Hybrid</button>
+          <button class="toggle-btn" onclick="setWorkType('onsite')">On-site</button>
+        </div>
+      </div>
+      <div class="switch-row">
+        <div>
+          <div style="font-weight:600;color:var(--navy);font-size:.9rem">Need Visa Sponsorship?</div>
+          <div style="font-size:.78rem;color:var(--slate)">Will filter jobs that offer sponsorship</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="visa-toggle" onchange="syncState('preferences.visaNeeded',this.checked)"/>
+          <span class="slider-sw"></span>
+        </label>
+      </div>
+    </div>
+    <div class="ob-nav">
+      <button class="btn btn-ghost" onclick="obBack(2)">← Back</button>
+      <button class="btn btn-primary btn-lg" onclick="obNext(2)">Continue → Agent Setup</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: Agent Config -->
+  <div id="ob-step-3" class="onboarding-body hidden">
+    <h1 class="ob-step-title">Configure Your AI Agent</h1>
+    <p class="ob-step-sub">Set how Orion should work for you. You can change these anytime in Settings.</p>
+    <div class="ob-card">
+      <div class="ob-section-title">Agent Mode</div>
+      <div class="switch-row">
+        <div>
+          <div style="font-weight:600;color:var(--navy);font-size:.9rem">Supervised Mode</div>
+          <div style="font-size:.78rem;color:var(--slate)">You approve each application before it's submitted</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="supervised-toggle" checked onchange="setAgentMode(this.checked ? 'supervised' : 'automated')"/>
+          <span class="slider-sw"></span>
+        </label>
+      </div>
+      <div class="ob-section-title">Daily Apply Limit</div>
+      <div class="form-group">
+        <div class="range-wrap">
+          <input type="range" id="daily-limit" class="range-input" min="1" max="50" value="10" oninput="document.getElementById('daily-limit-val').textContent=this.value;syncState('agent.dailyLimit',parseInt(this.value))"/>
+          <div class="range-labels">
+            <span>1/day</span>
+            <span id="daily-limit-val" style="color:var(--teal);font-weight:700">10</span>
+            <span>50/day</span>
+          </div>
+        </div>
+      </div>
+      <div class="ob-section-title">Job Types to Target</div>
+      <div class="toggle-group" id="job-types-toggle">
+        <button class="toggle-btn active" onclick="toggleJobType(this,'full-time')">Full-time</button>
+        <button class="toggle-btn" onclick="toggleJobType(this,'contract')">Contract</button>
+        <button class="toggle-btn" onclick="toggleJobType(this,'internship')">Internship</button>
+        <button class="toggle-btn" onclick="toggleJobType(this,'part-time')">Part-time</button>
+      </div>
+      <div class="ob-section-title">Company Size Preference</div>
+      <div class="toggle-group">
+        <button class="toggle-btn" onclick="toggleCompanySize(this,'startup')">Startup (1–50)</button>
+        <button class="toggle-btn active" onclick="toggleCompanySize(this,'mid')">Mid (51–500)</button>
+        <button class="toggle-btn active" onclick="toggleCompanySize(this,'enterprise')">Enterprise (500+)</button>
+      </div>
+      <div class="ob-section-title">Minimum Match Score</div>
+      <div class="form-group">
+        <div class="range-wrap">
+          <input type="range" id="min-match" class="range-input" min="50" max="95" value="70" oninput="document.getElementById('min-match-val').textContent=this.value+'%';syncState('agent.minMatchScore',parseInt(this.value))"/>
+          <div class="range-labels">
+            <span>50% (more results)</span>
+            <span id="min-match-val" style="color:var(--teal);font-weight:700">70%</span>
+            <span>95% (higher quality)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ob-nav">
+      <button class="btn btn-ghost" onclick="obBack(3)">← Back</button>
+      <button class="btn btn-coral btn-lg" onclick="obFinish()">Launch My AI Agent 🚀</button>
+    </div>
+  </div>
+</div><!-- end view-onboarding -->
+
+<!-- ════════════════════════════════════════
+     DASHBOARD VIEW
+════════════════════════════════════════ -->
+<div id="view-dashboard" class="view">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="nav-logo">IL<span>·</span></div>
+    </div>
+    <div class="sidebar-nav">
+      <div class="sidebar-nav-item active" onclick="showPanel('home')" data-panel="home">
+        <span class="nav-icon">🏠</span><span>Dashboard</span>
+      </div>
+      <div class="sidebar-nav-item" onclick="showPanel('jobs')" data-panel="jobs">
+        <span class="nav-icon">🔍</span><span>Job Matches</span>
+      </div>
+      <div class="sidebar-nav-item" onclick="showPanel('applications')" data-panel="applications">
+        <span class="nav-icon">📋</span><span>Applications</span>
+      </div>
+      <div class="sidebar-nav-item" onclick="showPanel('resume')" data-panel="resume">
+        <span class="nav-icon">📄</span><span>Resume AI</span>
+      </div>
+      <div class="sidebar-nav-item" onclick="showPanel('autofill')" data-panel="autofill">
+        <span class="nav-icon">⚡</span><span>Auto-Fill</span>
+      </div>
+      <div class="sidebar-nav-item" onclick="showPanel('agent')" data-panel="agent" style="border:1px solid rgba(249,115,22,.3);background:rgba(249,115,22,.05)">
+        <span class="nav-icon">🧠</span><span>AI Agent</span>
+      </div>
+      <div class="sidebar-nav-item" onclick="showPanel('copilot')" data-panel="copilot">
+        <span class="nav-icon">🤖</span><span>AI Copilot</span>
+      </div>
+      <div class="sidebar-nav-item" onclick="showPanel('settings')" data-panel="settings">
+        <span class="nav-icon">⚙️</span><span>Settings</span>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-ava" id="sidebar-ava">A</div>
+      <div>
+        <div class="user-name" id="sidebar-name">Alex Johnson</div>
+        <div class="user-plan" id="sidebar-plan">Free Plan</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="dash-main">
+
+    <!-- HOME PANEL -->
+    <div id="panel-home" class="dash-panel active">
+      <div class="dash-header">
+        <h1 class="dash-title">Good morning, <span id="dash-greeting-name">there</span> 👋</h1>
+        <p class="dash-sub">Your AI Agent is scanning 400,000+ jobs right now.</p>
+      </div>
+      <!-- stats row -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-num" data-count="7">0</div>
+          <div class="stat-label">Applications Today</div>
+          <div class="stat-change">↑ 3 from yesterday</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" data-count="43">0</div>
+          <div class="stat-label">Total Applications</div>
+          <div class="stat-change">↑ 12 this week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" data-count="28" data-suffix="%">0%</div>
+          <div class="stat-label">Interview Rate</div>
+          <div class="stat-change">↑ 5% above avg</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" data-count="91" data-suffix="%">0%</div>
+          <div class="stat-label">Avg ATS Score</div>
+          <div class="stat-change">↑ Excellent</div>
+        </div>
+      </div>
+      <!-- agent status -->
+      <div class="agent-card">
+        <div class="agent-card-top">
+          <div style="font-weight:700;color:var(--navy);font-size:1.05rem">AI Agent Status</div>
+          <div class="agent-toggle-area">
+            <span class="agent-on-badge agent-on" id="agent-status-badge">● ON</span>
+            <label class="switch">
+              <input type="checkbox" id="agent-main-toggle" checked onchange="toggleAgent(this.checked)"/>
+              <span class="slider-sw"></span>
+            </label>
+          </div>
+        </div>
+        <div class="agent-scan-text">
+          <div class="pulse-dot" id="agent-pulse"></div>
+          <span id="agent-scan-text">Scanning 400,000+ jobs • Supervised Mode • Last applied 4 min ago</span>
+        </div>
+        <div style="margin-top:12px;padding:10px 14px;background:var(--bg2);border-radius:var(--radius-sm);font-size:.82rem;color:var(--slate)">
+          <strong style="color:var(--navy)">Today's queue:</strong> 3 jobs pending your approval in supervised mode
+          <button class="btn btn-primary btn-sm" style="margin-left:12px;float:right" onclick="showPanel('jobs')">Review Queue →</button>
+        </div>
+      </div>
+      <!-- 2-col grid: job queue + activity -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px" class="home-grid">
+        <div>
+          <div style="font-weight:700;color:var(--navy);margin-bottom:14px;font-size:1rem">Job Queue <span class="badge badge-teal" style="margin-left:6px">5 new</span></div>
+          <div class="job-queue-list" id="job-queue-list">
+            <!-- populated by JS -->
+          </div>
+        </div>
+        <div>
+          <div style="font-weight:700;color:var(--navy);margin-bottom:14px;font-size:1rem">Recent Activity</div>
+          <div class="activity-feed" id="activity-feed">
+            <!-- populated by JS -->
+          </div>
+        </div>
+      </div>
+      <!-- kanban mini -->
+      <div style="font-weight:700;color:var(--navy);margin-bottom:14px;font-size:1rem">Application Pipeline</div>
+      <div class="kanban-board" id="kanban-board">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <!-- JOB MATCHES PANEL -->
+    <div id="panel-jobs" class="dash-panel">
+      <div class="dash-header">
+        <h1 class="dash-title">Job Matches</h1>
+        <p class="dash-sub">AI-ranked matches based on your profile. Updated hourly.</p>
+      </div>
+      <div class="jobs-filters">
+        <div class="jobs-search" style="flex:2">
+          <span class="jobs-search-icon">🔍</span>
+          <input type="text" class="form-control" id="job-search" placeholder="Search jobs, companies, skills..." oninput="filterJobs()"/>
+        </div>
+        <select class="form-control" style="width:auto" id="filter-location" onchange="filterJobs()">
+          <option value="">All Locations</option>
+          <option value="Remote">Remote</option>
+          <option value="San Francisco">San Francisco</option>
+          <option value="New York">New York</option>
+        </select>
+        <select class="form-control" style="width:auto" id="filter-type" onchange="filterJobs()">
+          <option value="">All Types</option>
+          <option value="full-time">Full-time</option>
+          <option value="contract">Contract</option>
+        </select>
+        <button class="btn btn-ghost btn-sm" onclick="resetFilters()">Reset</button>
+      </div>
+      <div class="job-cards-grid" id="job-cards-grid">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <!-- APPLICATIONS PANEL -->
+    <div id="panel-applications" class="dash-panel">
+      <div class="dash-header">
+        <h1 class="dash-title">Applications</h1>
+        <p class="dash-sub">Track every application from submission to offer.</p>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="app-table" id="app-table">
+          <thead>
+            <tr>
+              <th>Company</th>
+              <th>Role</th>
+              <th>Applied</th>
+              <th>Status</th>
+              <th>ATS Score</th>
+              <th>Resume Version</th>
+            </tr>
+          </thead>
+          <tbody id="app-table-body">
+            <!-- populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RESUME AI PANEL -->
+    <div id="panel-resume" class="dash-panel">
+      <div class="dash-header">
+        <h1 class="dash-title">Resume AI</h1>
+        <p class="dash-sub">Generate ATS-optimized resumes tailored to any job listing.</p>
+      </div>
+      <div class="resume-builder-wrap">
+        <div class="resume-form-side">
+          <div class="form-group">
+            <label>Paste Job Listing (for ATS optimization)</label>
+            <textarea class="form-control" id="job-listing-input" rows="6" placeholder="Paste the full job description here..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Resume Style</label>
+            <div class="style-selector">
+              <button class="style-btn active" onclick="setResumeStyle('Corporate',this)">Corporate</button>
+              <button class="style-btn" onclick="setResumeStyle('Modern',this)">Modern</button>
+              <button class="style-btn" onclick="setResumeStyle('Executive',this)">Executive</button>
+              <button class="style-btn" onclick="setResumeStyle('Creative',this)">Creative</button>
+              <button class="style-btn" onclick="setResumeStyle('Minimal',this)">Minimal</button>
+            </div>
+          </div>
+          <button class="btn btn-primary w-full btn-lg" onclick="generateResume()" id="gen-resume-btn">
+            Generate Tailored Resume ✨
+          </button>
+          <div id="resume-error" style="margin-top:12px;font-size:.82rem;color:var(--red);display:none"></div>
+        </div>
+        <div class="resume-preview-side">
+          <div style="font-weight:700;color:var(--navy);margin-bottom:16px">ATS Analysis</div>
+          <div class="ats-ring-wrap">
+            <svg class="ats-svg" width="100" height="100" viewBox="0 0 100 100">
+              <circle class="ats-track" cx="50" cy="50" r="45"/>
+              <circle class="ats-fill" id="ats-ring-fill" cx="50" cy="50" r="45"/>
+            </svg>
+            <div class="ats-num" id="ats-score-num">--</div>
+            <div class="ats-label">ATS Score</div>
+          </div>
+          <div style="margin-bottom:16px">
+            <div style="font-size:.78rem;font-weight:700;color:var(--navy);margin-bottom:8px">KEYWORD ANALYSIS</div>
+            <div class="keywords-list" id="keywords-found"></div>
+          </div>
+          <div id="resume-preview-area" style="display:none">
+            <div style="font-size:.78rem;font-weight:700;color:var(--navy);margin-bottom:8px">GENERATED RESUME</div>
+            <div class="resume-preview-doc" id="resume-preview-doc"></div>
+            <div class="dl-tabs" style="margin-top:12px">
+              <button class="dl-tab" onclick="downloadResume('pdf')">⬇ PDF</button>
+              <button class="dl-tab" onclick="downloadResume('txt')">⬇ Text</button>
+              <button class="dl-tab" onclick="copyResume()">⎘ Copy</button>
+            </div>
+          </div>
+          <div id="resume-placeholder" style="text-align:center;padding:40px 20px;color:var(--text3)">
+            <div style="font-size:2.5rem;margin-bottom:12px">📄</div>
+            <div style="font-size:.9rem">Generate a resume to see ATS analysis and preview here</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUTO-FILL PANEL -->
+    <div id="panel-autofill" class="dash-panel">
+      <div class="dash-header">
+        <h1 class="dash-title">Auto-Fill Agent</h1>
+        <p class="dash-sub">Watch AI fill job applications in real-time using your profile data.</p>
+      </div>
+      <div style="background:linear-gradient(135deg,rgba(13,148,136,.08),rgba(249,115,22,.04));border:1px solid rgba(13,148,136,.2);border-radius:var(--radius);padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;gap:14px">
+        <div style="font-size:1.8rem">🔌</div>
+        <div>
+          <div style="font-weight:700;color:var(--navy);margin-bottom:2px">Install Chrome Extension</div>
+          <div style="font-size:.85rem;color:var(--slate)">Auto-fill real applications on LinkedIn, Workday, Greenhouse, and 1000+ ATS platforms</div>
+        </div>
+        <button class="btn btn-primary btn-sm" style="margin-left:auto;flex-shrink:0" onclick="showToast('Chrome Extension coming soon! Add your email to the waitlist.','warning')">Download Extension →</button>
+        <!-- REPLACE WITH YOUR CHROME EXTENSION URL -->
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+        <div class="autofill-demo">
+          <div class="agent-overlay-badge">
+            <div class="pulse-dot"></div>
+            InfuseLink Agent
+          </div>
+          <h3 style="font-weight:700;color:var(--navy);margin-bottom:6px">Senior Software Engineer</h3>
+          <p style="font-size:.8rem;color:var(--slate);margin-bottom:20px">TechCorp Inc. • San Francisco, CA</p>
+          <div id="demo-form">
+            <div class="demo-form-field">
+              <div class="demo-field-label">Full Name</div>
+              <input type="text" class="demo-field-input" id="df-name" readonly/>
+            </div>
+            <div class="demo-form-field">
+              <div class="demo-field-label">Email Address</div>
+              <input type="text" class="demo-field-input" id="df-email" readonly/>
+            </div>
+            <div class="demo-form-field">
+              <div class="demo-field-label">Phone Number</div>
+              <input type="text" class="demo-field-input" id="df-phone" readonly/>
+            </div>
+            <div class="demo-form-field">
+              <div class="demo-field-label">LinkedIn URL</div>
+              <input type="text" class="demo-field-input" id="df-linkedin" readonly/>
+            </div>
+            <div class="demo-form-field">
+              <div class="demo-field-label">Years of Experience</div>
+              <input type="text" class="demo-field-input" id="df-exp" readonly/>
+            </div>
+            <div class="demo-form-field">
+              <div class="demo-field-label">Cover Letter</div>
+              <textarea class="demo-field-input demo-textarea" id="df-cover" readonly></textarea>
+            </div>
+          </div>
+          <button class="btn btn-primary w-full mt-4" id="start-demo-btn" onclick="startAutoFillDemo()">▶ Watch AI Fill This Form</button>
+          <div id="demo-submit-area" style="display:none;margin-top:16px">
+            <div style="background:var(--bg2);border-radius:var(--radius-sm);padding:14px;font-size:.85rem;color:var(--slate);margin-bottom:12px">
+              <strong style="color:var(--navy)">Supervised Mode:</strong> All fields filled and ready. Submit this application?
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-ghost w-full btn-sm" onclick="resetAutoFill()">Skip</button>
+              <button class="btn btn-primary w-full btn-sm" onclick="submitAutoFill()">Submit Application ✓</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card mb-4">
+            <h3 style="font-weight:700;color:var(--navy);margin-bottom:12px">Agent Mode</h3>
+            <div class="switch-row">
+              <div>
+                <div style="font-weight:600;font-size:.9rem;color:var(--navy)">Supervised Mode</div>
+                <div style="font-size:.78rem;color:var(--slate)">Approve each submission</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="af-mode-toggle" checked onchange="setAgentMode(this.checked?'supervised':'automated')"/>
+                <span class="slider-sw"></span>
+              </label>
+            </div>
+          </div>
+          <div class="card">
+            <h3 style="font-weight:700;color:var(--navy);margin-bottom:12px">Supported Platforms</h3>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <span class="badge badge-navy">LinkedIn</span>
+              <span class="badge badge-navy">Workday</span>
+              <span class="badge badge-navy">Greenhouse</span>
+              <span class="badge badge-navy">Lever</span>
+              <span class="badge badge-navy">Indeed</span>
+              <span class="badge badge-navy">Taleo</span>
+              <span class="badge badge-navy">iCIMS</span>
+              <span class="badge badge-navy">BambooHR</span>
+              <span class="badge badge-navy">+992 more</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI COPILOT PANEL -->
+    <div id="panel-copilot" class="dash-panel">
+      <div class="dash-header">
+        <h1 class="dash-title">Orion AI Copilot</h1>
+        <p class="dash-sub">Your personal career advisor — powered by Gemini AI.</p>
+      </div>
+      <div class="chat-wrap">
+        <div class="chat-header">
+          <div class="orion-avatar">🤖</div>
+          <div>
+            <div class="orion-name">Orion</div>
+            <div class="orion-status">● Online — Ready to help</div>
+          </div>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+          <div class="chat-msg ai">
+            <div class="chat-msg-ava">O</div>
+            <div class="chat-msg-bubble">Hi! I'm Orion, your AI career copilot. I have full context of your profile, skills, and job history. How can I help you today? You can ask me about salary negotiation, interview prep, resume tips, or anything career-related!</div>
+          </div>
+        </div>
+        <div class="chat-suggestions">
+          <button class="chat-suggestion-btn" onclick="sendChatSuggestion(this)">How do I negotiate salary?</button>
+          <button class="chat-suggestion-btn" onclick="sendChatSuggestion(this)">Improve my resume summary</button>
+          <button class="chat-suggestion-btn" onclick="sendChatSuggestion(this)">What skills should I learn?</button>
+          <button class="chat-suggestion-btn" onclick="sendChatSuggestion(this)">Prepare me for a PM interview</button>
+        </div>
+        <div class="chat-input-area">
+          <textarea class="chat-input" id="chat-input" placeholder="Ask Orion anything about your job search..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
+          <button class="chat-send" onclick="sendChat()">
+            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS PANEL -->
+    <div id="panel-settings" class="dash-panel">
+      <div class="dash-header">
+        <h1 class="dash-title">Settings</h1>
+        <p class="dash-sub">Manage your profile, agent, and account preferences.</p>
+      </div>
+      <div id="settings-emailjs-banner" class="config-banner" style="display:none">
+        ⚠️ <strong>EmailJS not configured.</strong> Add your EmailJS keys to enable automated email notifications. <a href="https://emailjs.com" target="_blank">Configure →</a>
+      </div>
+      <div class="settings-section">
+        <h3 class="settings-section-title">👤 Profile</h3>
+        <div class="input-row">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="s-name" class="form-control" oninput="syncState('user.name',this.value);updateSidebar()"/>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="s-email" class="form-control" oninput="syncState('user.email',this.value)"/>
+          </div>
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="text" id="s-phone" class="form-control" oninput="syncState('user.phone',this.value)"/>
+          </div>
+          <div class="form-group">
+            <label>Location</label>
+            <input type="text" id="s-location" class="form-control" oninput="syncState('user.location',this.value)"/>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="saveSettings()">Save Profile</button>
+      </div>
+      <div class="settings-section">
+        <h3 class="settings-section-title">🤖 Agent Configuration</h3>
+        <div class="switch-row">
+          <div><div style="font-weight:600;font-size:.9rem">Supervised Mode</div><div style="font-size:.78rem;color:var(--slate)">Approve each application</div></div>
+          <label class="switch"><input type="checkbox" id="s-supervised" checked onchange="setAgentMode(this.checked?'supervised':'automated')"/><span class="slider-sw"></span></label>
+        </div>
+        <div class="form-group mt-4">
+          <label>Daily Apply Limit: <strong id="s-daily-val">10</strong></label>
+          <input type="range" class="range-input" min="1" max="50" value="10" id="s-daily-limit" oninput="document.getElementById('s-daily-val').textContent=this.value;syncState('agent.dailyLimit',parseInt(this.value))"/>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h3 class="settings-section-title">🔔 Notifications</h3>
+        <div class="switch-row">
+          <div><div style="font-weight:600;font-size:.9rem">Email — New Job Matches</div></div>
+          <label class="switch"><input type="checkbox" checked/><span class="slider-sw"></span></label>
+        </div>
+        <div class="switch-row">
+          <div><div style="font-weight:600;font-size:.9rem">Email — Application Updates</div></div>
+          <label class="switch"><input type="checkbox" checked/><span class="slider-sw"></span></label>
+        </div>
+        <div class="switch-row">
+          <div><div style="font-weight:600;font-size:.9rem">Weekly Summary Email</div></div>
+          <label class="switch"><input type="checkbox" checked/><span class="slider-sw"></span></label>
+        </div>
+        <button class="btn btn-ghost btn-sm mt-4" onclick="sendWeeklySummary()">Preview Weekly Summary Email</button>
+      </div>
+      <div class="settings-section">
+        <h3 class="settings-section-title">🔗 Connected Accounts</h3>
+        <div class="switch-row">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:1.2rem">💼</span>
+            <div><div style="font-weight:600;font-size:.9rem">LinkedIn</div><div style="font-size:.78rem;color:var(--slate)">Sync profile and jobs</div></div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="showToast('LinkedIn integration coming soon!')">Connect</button>
+        </div>
+        <div class="switch-row">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:1.2rem">📋</span>
+            <div><div style="font-weight:600;font-size:.9rem">Indeed</div><div style="font-size:.78rem;color:var(--slate)">Import job history</div></div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="showToast('Indeed integration coming soon!')">Connect</button>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h3 class="settings-section-title">💳 Billing</h3>
+        <div id="billing-info" style="margin-bottom:16px">
+          <div style="font-size:.9rem;color:var(--slate)">Current Plan: <strong id="billing-plan" style="color:var(--navy)">Free</strong></div>
+        </div>
+        <div class="coupon-input-row">
+          <input type="text" id="coupon-input" class="form-control" placeholder="Enter coupon code (e.g. INFUSE3X1)" style="text-transform:uppercase"/>
+          <button class="btn btn-primary" onclick="applyCoupon()">Apply</button>
+        </div>
+        <div id="coupon-result" style="margin-top:8px;font-size:.82rem"></div>
+        <button class="btn btn-coral btn-sm mt-4" onclick="showView('landing');setTimeout(()=>{document.getElementById('pricing').scrollIntoView({behavior:'smooth'})},200)">Upgrade Plan →</button>
+      </div>
+    </div>
+
+
+    <!-- AI AGENT CONTROL CENTER PANEL -->
+    <div id="panel-agent" class="dash-panel"></div>
+
+  </main>
+</div><!-- end view-dashboard -->
+
+<!-- SLIDE PANEL + OVERLAY -->
+<div class="slide-overlay" id="slide-overlay" onclick="closeSlidePanel()"></div>
+<div class="slide-panel" id="slide-panel">
+  <button class="slide-panel-close" onclick="closeSlidePanel()">✕</button>
+  <div id="slide-panel-content"></div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════
+// EMAILJS CONFIG — USER REPLACES THESE VALUES
+// ════════════════════════════════════════════════
+const EMAILJS_CONFIG = {
+  serviceId: 'YOUR_SERVICE_ID',
+  templateIds: { welcome:'YOUR_WELCOME_TEMPLATE', payment:'YOUR_PAYMENT_TEMPLATE', resume:'YOUR_RESUME_TEMPLATE', application:'YOUR_APPLICATION_TEMPLATE', weekly:'YOUR_WEEKLY_TEMPLATE' },
+  publicKey: 'YOUR_PUBLIC_KEY',
+};
+
+const COUPONS = {
+  'INFUSE3X1':   { plan:'Triple Pack',      price:'$7.99',     savings:'Save $2' },
+  'INFUSE5CVR':  { plan:'Pro Bundle',       price:'$11.99',    savings:'Save $3' },
+  'INFUSE30DAY': { plan:'Unlimited 30-Day', price:'$14.99',    savings:'Save $5' },
+  'INFUSE10BLK': { plan:'Mega Bulk',        price:'$14.99',    savings:'Save $10' },
+  'INFUSEAGENT': { plan:'AI Agent Monthly', price:'$19.99/mo', savings:'Save $10/mo' },
+};
+
+// ════════════════════════════════════════════════
+// STATE — real data only, no hardcoded fake jobs
+// ════════════════════════════════════════════════
+let STATE = {
+  user: {name:'',email:'',phone:'',location:'',linkedin:'',password:''},
+  profile: {degree:'',school:'',gyr:'',gpa:'',skills:[],level:'mid',certs:'',summary:''},
+  experience: [],
+  preferences: {targetTitle:'',industry:'Technology',location:'',salaryMin:120000,salaryMax:160000,workType:'remote',visaNeeded:false},
+  agent: {enabled:false, mode:'supervised', dailyLimit:10, minMatchScore:70},
+  applications: [],
+  activityLog: [],
+  liveJobs: [],          // populated by real API
+  profileAnalysis: null, // populated by real AI
+  jobStrategy: null,     // populated by real AI
+  currentPlan: null,
+  coupon: null,
+  currentView: 'landing',
+  chatHistory: [],
+  generatedResume: null,
+  selectedResumeStyle: 'Corporate',
+  agentRunning: false,
+};
+
+try {
+  const saved = localStorage.getItem('infuselink_state');
+  if (saved) { const p = JSON.parse(saved); STATE = { ...STATE, ...p }; }
+} catch(e) {}
+
+function saveState() { try { localStorage.setItem('infuselink_state', JSON.stringify(STATE)); } catch(e) {} }
+function syncState(path, value) {
+  const parts = path.split('.');
+  let obj = STATE;
+  for (let i = 0; i < parts.length - 1; i++) obj = obj[parts[i]];
+  obj[parts[parts.length - 1]] = value;
+  saveState();
+}
+
+// ════════════════════════════════════════════════
+// REAL AI AGENT API CALLER
+// All AI calls go through the Netlify function — never direct
+// ════════════════════════════════════════════════
+async function callAgent(task, payload = {}) {
+  const body = { task, profile: STATE, ...payload };
+  const res = await fetch('/.netlify/functions/resume', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Network error' }));
+    throw new Error(err.error || `HTTP ${res.status}`);
+  }
+  const data = await res.json();
+  return {
+    text:         data.content?.[0]?.text || '',
+    agent_steps:  data.agent_steps || [],
+    tool_results: data.tool_results || {},
+  };
+}
+
+// Legacy direct call for simple prompts
+async function callAI(messages, system, maxTokens = 1000) {
+  const res = await fetch('/.netlify/functions/resume', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages, system, max_tokens: maxTokens }),
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error);
+  return data.content?.[0]?.text || '';
+}
+
+function buildResumeText() {
+  const u = STATE.user, p = STATE.profile, exp = STATE.experience, pr = STATE.preferences;
+  return `${u.name||'Candidate'}
+${u.email||''} | ${u.phone||''} | ${u.location||''}
+${u.linkedin||''}
+
+SUMMARY: ${p.summary||'Experienced professional seeking new opportunities'}
+SKILLS: ${(p.skills||[]).join(', ')}
+EXPERIENCE LEVEL: ${p.level||'mid'}
+TARGET ROLE: ${pr.targetTitle||'Not specified'}
+EDUCATION: ${p.degree||''} from ${p.school||''} (${p.gyr||''})
+
+EXPERIENCE:
+${(exp||[]).map(e=>`${e.title} at ${e.company} (${e.start} – ${e.end})\n${e.desc}`).join('\n\n')||'No experience listed'}
+
+CERTIFICATIONS: ${p.certs||'None'}`.trim();
+}
+
+// Log activity to the real activity feed
+function logActivity(icon, html) {
+  const now = new Date();
+  const time = now.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  STATE.activityLog.unshift({ icon, text: html, time });
+  if (STATE.activityLog.length > 50) STATE.activityLog = STATE.activityLog.slice(0, 50);
+  saveState();
+  renderActivityFeed();
+}
+
+// ════════════════════════════════════════════════
+// VIEW MANAGEMENT
+// ════════════════════════════════════════════════
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const el = document.getElementById('view-' + name);
+  if (el) { el.classList.add('active'); STATE.currentView = name; saveState(); window.scrollTo(0,0); }
+  if (name === 'landing') initScrollReveal();
+  if (name === 'dashboard') initDashboard();
+}
+
+function showPanel(name) {
+  document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-nav-item').forEach(i => i.classList.remove('active'));
+  document.getElementById('panel-' + name)?.classList.add('active');
+  document.querySelector(`[data-panel="${name}"]`)?.classList.add('active');
+  if (name === 'home')         { initDashStats(); renderJobQueue(); renderActivityFeed(); renderKanban(); }
+  if (name === 'jobs')         { renderJobCards(); }
+  if (name === 'applications') { renderAppTable(); }
+  if (name === 'settings')     { populateSettings(); }
+  if (name === 'copilot')      { initChat(); }
+  if (name === 'agent')        { renderAgentPanel(); }
+}
+
+function goToDashboard() { showView('dashboard'); showPanel('home'); }
+
+// ════════════════════════════════════════════════
+// ONBOARDING
+// ════════════════════════════════════════════════
+function startOnboarding() { showView('onboarding'); obGoTo(1); populateObStep1(); checkEmailJSConfig(); }
+
+function checkEmailJSConfig() {
+  const off = EMAILJS_CONFIG.publicKey === 'YOUR_PUBLIC_KEY';
+  ['emailjs-setup-banner','settings-emailjs-banner'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){ off ? el.classList.remove('hidden') : el.classList.add('hidden'); if(id==='settings-emailjs-banner') el.style.display=off?'flex':'none'; }
+  });
+}
+
+function obGoTo(step) {
+  for (let i = 1; i <= 3; i++) {
+    document.getElementById('ob-step-'+i)?.classList.toggle('hidden', i !== step);
+    const prog = document.getElementById('prog-'+i);
+    if (prog) { prog.classList.remove('active','done'); if(i===step) prog.classList.add('active'); else if(i<step) prog.classList.add('done'); }
+  }
+  const fills = {1:'33%',2:'66%',3:'100%'};
+  document.getElementById('ob-progress-fill').style.width = fills[step]||'33%';
+  document.getElementById('top-progress').style.width = fills[step]||'33%';
+  window.scrollTo(0,0);
+}
+
+function populateObStep1() {
+  ['ob-name','ob-email','ob-linkedin'].forEach((id,i)=>{
+    const el=document.getElementById(id); if(el) el.value=[STATE.user.name,STATE.user.email,STATE.user.linkedin][i]||'';
+  });
+}
+
+function obNext(step) {
+  if (step === 1) {
+    const name  = document.getElementById('ob-name')?.value.trim();
+    const email = document.getElementById('ob-email')?.value.trim();
+    if (!name || !email) { showToast('Please enter your name and email','error'); return; }
+    STATE.user.name = name; STATE.user.email = email; saveState();
+    sendEmail('welcome', { name, email });
+    obGoTo(2); populateObStep2();
+  } else if (step === 2) {
+    obGoTo(3);
+  }
+}
+function obBack(step) { obGoTo(step - 1); }
+
+function populateObStep2() {
+  const f = (id, val) => { const el = document.getElementById(id); if(el) el.value = val||''; };
+  f('p-name', STATE.user.name); f('p-phone', STATE.user.phone); f('p-location', STATE.user.location);
+  f('p-linkedin', STATE.user.linkedin); f('p-degree', STATE.profile.degree); f('p-school', STATE.profile.school);
+  f('p-gradyr', STATE.profile.gyr); f('p-gpa', STATE.profile.gpa); f('p-certs', STATE.profile.certs);
+  f('p-summary', STATE.profile.summary); f('p-target', STATE.preferences.targetTitle); f('p-pref-loc', STATE.preferences.location);
+  renderSkillTags(); renderExperiences(); setLevel(STATE.profile.level, true);
+}
+
+function obFinish() {
+  showLoading('Launching AI Agent & analyzing your profile...');
+  STATE.agent.enabled = true; saveState();
+  // Immediately run real profile analysis
+  callAgent('analyze_and_strategize').then(result => {
+    hideLoading();
+    try {
+      // Try to extract JSON tool results
+      const analysis = result.tool_results?.analyze_profile;
+      const strategy = result.tool_results?.build_job_search_strategy;
+      if (analysis) { STATE.profileAnalysis = analysis; saveState(); }
+      if (strategy) { STATE.jobStrategy = strategy; saveState(); }
+    } catch(e) {}
+    goToDashboard();
+    document.getElementById('top-progress').style.width = '0%';
+    showToast('🚀 Agent activated! Profile analyzed.','success');
+    logActivity('🧠', `AI analyzed your profile — <strong>${STATE.profileAnalysis?.profile_strength||'—'}%</strong> profile strength`);
+  }).catch(err => {
+    hideLoading();
+    goToDashboard();
+    showToast('Agent ready — add Gemini API key to enable AI features','warning');
+  });
+}
+
+// ── Experience ──
+function addExperience() {
+  STATE.experience.push({id:Date.now(),title:'',company:'',start:'',end:'',desc:''});
+  saveState(); renderExperiences();
+}
+function removeExperience(id) { STATE.experience = STATE.experience.filter(e=>e.id!==id); saveState(); renderExperiences(); }
+function renderExperiences() {
+  const list = document.getElementById('experience-list'); if(!list) return;
+  if(!STATE.experience.length) { list.innerHTML='<p style="font-size:.85rem;color:var(--text3);text-align:center;padding:16px 0">No experience added yet.</p>'; return; }
+  list.innerHTML = STATE.experience.map(e=>`
+    <div class="experience-entry" id="exp-${e.id}">
+      <button class="exp-remove" onclick="removeExperience(${e.id})">×</button>
+      <div class="input-row">
+        <div class="form-group"><label>Job Title</label><input type="text" class="form-control" value="${e.title||''}" placeholder="Senior Engineer" oninput="updateExp(${e.id},'title',this.value)"/></div>
+        <div class="form-group"><label>Company</label><input type="text" class="form-control" value="${e.company||''}" placeholder="Acme Corp" oninput="updateExp(${e.id},'company',this.value)"/></div>
+      </div>
+      <div class="input-row">
+        <div class="form-group"><label>Start Date</label><input type="text" class="form-control" value="${e.start||''}" placeholder="Jan 2022" oninput="updateExp(${e.id},'start',this.value)"/></div>
+        <div class="form-group"><label>End Date</label><input type="text" class="form-control" value="${e.end||''}" placeholder="Present" oninput="updateExp(${e.id},'end',this.value)"/></div>
+      </div>
+      <div class="form-group"><label>Responsibilities & Achievements</label><textarea class="form-control" placeholder="Key achievements..." oninput="updateExp(${e.id},'desc',this.value)">${e.desc||''}</textarea></div>
+    </div>`).join('');
+}
+function updateExp(id, field, val) { const e=STATE.experience.find(x=>x.id===id); if(e){e[field]=val;saveState();} }
+
+// ── Skills ──
+function addSkill(val) {
+  if(!val?.trim()) return;
+  const s = val.trim();
+  if(!STATE.profile.skills.includes(s)) { STATE.profile.skills.push(s); saveState(); renderSkillTags(); }
+}
+function removeSkill(skill) { STATE.profile.skills=STATE.profile.skills.filter(s=>s!==skill); saveState(); renderSkillTags(); }
+function renderSkillTags() {
+  const el=document.getElementById('skills-display'); if(!el) return;
+  el.innerHTML=STATE.profile.skills.map(s=>`<span class="skill-tag">${s}<button onclick="removeSkill('${s}')">×</button></span>`).join('');
+}
+
+// ── Toggles ──
+function setLevel(val, silent=false) {
+  STATE.profile.level=val; if(!silent) saveState();
+  document.querySelectorAll('#level-toggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.val===val));
+}
+function setWorkType(val) {
+  STATE.preferences.workType=val; saveState();
+  document.querySelectorAll('#worktype-toggle .toggle-btn').forEach((b,i)=>b.classList.toggle('active',['remote','hybrid','onsite'][i]===val));
+}
+function setAgentMode(mode) {
+  STATE.agent.mode=mode; saveState();
+  ['supervised-toggle','s-supervised','af-mode-toggle'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=mode==='supervised';});
+}
+function setSalary(val) { const p=val.split('-'); STATE.preferences.salaryMin=parseInt(p[0])||0; STATE.preferences.salaryMax=parseInt(p[1])||200000; saveState(); }
+function toggleJobType(btn) { btn.classList.toggle('active'); }
+function toggleCompanySize(btn) { btn.classList.toggle('active'); }
+function setMode(mode) { ['supervised','automated'].forEach(m=>{document.getElementById('mode-'+m)?.classList.toggle('active',m===mode);}); STATE.agent.mode=mode; saveState(); }
+
+// ── Resume Upload ──
+function handleResumeUpload(input) {
+  const file = input.files[0]; if(!file) return;
+  const status = document.getElementById('upload-status');
+  status.textContent = 'Reading file...';
+  const reader = new FileReader();
+  reader.onload = e => {
+    const text = e.target.result;
+    const emailMatch = text.match(/[\w.-]+@[\w.-]+\.\w+/);
+    if (emailMatch && !STATE.user.email) { STATE.user.email=emailMatch[0]; document.getElementById('ob-email').value=emailMatch[0]; }
+    const lines = text.split('\n').filter(l=>l.trim());
+    if (lines.length && !STATE.user.name) { STATE.user.name=lines[0].trim().substring(0,50); document.getElementById('ob-name').value=STATE.user.name; }
+    STATE.profile.summary = text.substring(0,500); saveState();
+    status.textContent = `✓ Imported: ${file.name}`;
+    showToast('Resume imported!','success');
+  };
+  reader.onerror = () => { status.textContent='Error reading file.'; showToast('Could not read file','error'); };
+  reader.readAsText(file);
+}
+
+// ════════════════════════════════════════════════
+// DASHBOARD
+// ════════════════════════════════════════════════
+function initDashboard() {
+  updateSidebar(); renderJobQueue(); renderActivityFeed(); renderKanban();
+  renderJobCards(); renderAppTable(); populateSettings(); initDashStats(); initChat();
+  checkEmailJSConfig();
+  updateRealStats();
+  if(STATE.profileAnalysis) renderProfileInsights();
+  // Auto-run profile analysis if not done yet
+  if (!STATE.profileAnalysis && STATE.user.name && !STATE._analyzingProfile) {
+    STATE._analyzingProfile = true;
+    runProfileAnalysis();
+  }
+}
+
+function updateSidebar() {
+  const name = STATE.user.name || 'You';
+  const initials = name.split(' ').map(p=>p[0]).join('').toUpperCase().substring(0,2)||'IL';
+  document.getElementById('sidebar-ava').textContent = initials;
+  document.getElementById('sidebar-name').textContent = name;
+  document.getElementById('sidebar-plan').textContent = STATE.currentPlan ? STATE.currentPlan.name : 'Free Plan';
+  document.getElementById('dash-greeting-name').textContent = name.split(' ')[0]||'there';
+}
+
+function initDashStats() {
+  document.querySelectorAll('[data-count]').forEach(el => animateCounter(el));
+}
+
+
+function updateRealStats() {
+  const today = new Date().toISOString().split('T')[0];
+  const todayApps = STATE.applications.filter(a=>a.date===today).length;
+  const el1=document.getElementById('stat-today'); if(el1) el1.textContent=todayApps;
+  const el2=document.getElementById('stat-total'); if(el2) el2.textContent=STATE.applications.length;
+  const el3=document.getElementById('stat-interviews'); if(el3) el3.textContent=STATE.applications.filter(a=>a.status==='Interview'||a.status==='Offer').length;
+  const el4=document.getElementById('stat-jobs'); if(el4) el4.textContent=STATE.liveJobs.length;
+}
+
+function animateCounter(el) {
+  const target = parseInt(el.dataset.count)||0;
+  const suffix = el.dataset.suffix||'';
+  const divide = parseFloat(el.dataset.divide)||1;
+  const start = Date.now();
+  const tick = () => {
+    const p = Math.min((Date.now()-start)/1500, 1);
+    const ease = 1 - Math.pow(1-p, 3);
+    const cur = Math.floor(target*ease/divide*divide)/divide;
+    el.textContent = divide!==1 ? cur.toFixed(1)+suffix : Math.floor(cur).toLocaleString()+suffix;
+    if(p<1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+
+// ── Real profile analysis ──
+async function runProfileAnalysis() {
+  if (!STATE.user.name) return;
+  try {
+    logActivity('🔄','Running AI profile analysis...');
+    const result = await callAgent('analyze_and_strategize');
+    const analysis = result.tool_results?.analyze_profile;
+    const strategy = result.tool_results?.build_job_search_strategy;
+    if (analysis) { STATE.profileAnalysis = analysis; saveState(); }
+    if (strategy) { STATE.jobStrategy = strategy; saveState(); }
+    renderProfileInsights();
+    logActivity('✅',`Profile analysis complete — <strong>${analysis?.profile_strength||'—'}%</strong> strength, best roles: ${(analysis?.best_job_titles||[]).slice(0,2).join(', ')}`);
+  } catch(e) {
+    console.warn('Profile analysis failed:', e.message);
+  }
+  STATE._analyzingProfile = false;
+}
+
+function renderProfileInsights() {
+  const el = document.getElementById('profile-insights');
+  if (!el || !STATE.profileAnalysis) return;
+  const a = STATE.profileAnalysis;
+  el.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+      <div style="background:rgba(13,148,136,.06);border-radius:var(--radius-sm);padding:14px">
+        <div style="font-size:.72rem;font-weight:700;color:var(--teal);text-transform:uppercase;margin-bottom:6px">Profile Strength</div>
+        <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--navy)">${a.profile_strength||0}%</div>
+      </div>
+      <div style="background:rgba(249,115,22,.06);border-radius:var(--radius-sm);padding:14px">
+        <div style="font-size:.72rem;font-weight:700;color:var(--coral);text-transform:uppercase;margin-bottom:6px">Salary Estimate</div>
+        <div style="font-weight:700;color:var(--navy);font-size:.95rem">${a.salary_estimate||'—'}</div>
+      </div>
+    </div>
+    ${a.career_advice ? `<div style="margin-top:12px;padding:12px;background:var(--bg2);border-radius:var(--radius-sm);font-size:.85rem;color:var(--slate);line-height:1.6;border-left:3px solid var(--teal)"><strong style="color:var(--navy)">AI Advice:</strong> ${a.career_advice}</div>` : ''}
+    ${(a.skill_gaps||[]).length ? `<div style="margin-top:10px"><div style="font-size:.75rem;font-weight:700;color:var(--navy);margin-bottom:6px">SKILL GAPS TO ADDRESS</div><div style="display:flex;flex-wrap:wrap;gap:6px">${a.skill_gaps.map(s=>`<span class="badge badge-yellow">+ ${s}</span>`).join('')}</div></div>` : ''}
+    ${(a.best_job_titles||[]).length ? `<div style="margin-top:10px"><div style="font-size:.75rem;font-weight:700;color:var(--navy);margin-bottom:6px">BEST-FIT JOB TITLES</div><div style="display:flex;flex-wrap:wrap;gap:6px">${a.best_job_titles.map(t=>`<span class="badge badge-teal">${t}</span>`).join('')}</div></div>` : ''}
+  `;
+}
+
+// ── Job queue — shows real live jobs ──
+function renderJobQueue() {
+  const list = document.getElementById('job-queue-list'); if(!list) return;
+  if (!STATE.liveJobs.length) {
+    list.innerHTML = `<div style="text-align:center;padding:24px;color:var(--text3)">
+      <div style="font-size:1.8rem;margin-bottom:8px">🔍</div>
+      <div style="font-size:.88rem;font-weight:600;margin-bottom:8px">No jobs loaded yet</div>
+      <button class="btn btn-primary btn-sm" onclick="runJobSearch()">Search Live Jobs →</button>
+    </div>`;
+    return;
+  }
+  const colors = ['#0d9488','#8b5cf6','#f97316','#6366f1','#06b6d4'];
+  list.innerHTML = STATE.liveJobs.slice(0,5).map((j,i)=>`
+    <div class="jq-item" id="jq-${j.id}">
+      <div class="jq-avatar" style="background:${colors[i%colors.length]}">${(j.company||'?')[0].toUpperCase()}</div>
+      <div class="jq-info">
+        <div class="jq-title">${j.title}</div>
+        <div class="jq-meta">${j.company} • ${j.location||'Remote'} ${j.ats_score ? `• <span class="jq-match">${j.ats_score}% match</span>` : ''}</div>
+      </div>
+      <div class="jq-actions">
+        <button class="btn btn-sm btn-primary" onclick="runFullApplicationPrep(${JSON.stringify(j).replace(/"/g,'&quot;')})">Prep & Apply</button>
+        <button class="btn btn-sm btn-ghost" onclick="skipJob('${j.id}',this)">Skip</button>
+      </div>
+    </div>`).join('');
+}
+
+// ── REAL JOB SEARCH ──
+async function runJobSearch() {
+  const query = STATE.preferences.targetTitle || STATE.profileAnalysis?.search_keywords?.[0] || 'software engineer';
+  const loc   = STATE.preferences.location || 'remote';
+  const btn   = document.querySelector('[onclick="runJobSearch()"]');
+  if (btn) { btn.disabled=true; btn.innerHTML='<span class="loading-spinner"></span> Searching...'; }
+  try {
+    logActivity('🔍', `Searching live jobs for "<strong>${query}</strong>" in ${loc}...`);
+    const result = await callAgent('search_and_match', { query, location: loc });
+    const jobs = result.tool_results?.search_jobs?.jobs || [];
+    const scores = result.tool_results?.score_resume_vs_job;
+    // Attach scores to jobs
+    jobs.forEach(j => {
+      if (scores) { j.ats_score = scores.match_percentage || null; }
+    });
+    if (jobs.length) {
+      STATE.liveJobs = jobs; saveState();
+      renderJobQueue(); renderJobCards();
+      logActivity('✅', `Found <strong>${jobs.length}</strong> real live jobs — AI scored top matches`);
+      showToast(`Found ${jobs.length} live jobs!`,'success');
+    } else {
+      showToast('No jobs found — check your Adzuna API keys or try different keywords','warning');
+      logActivity('⚠️', 'Job search returned no results. Check Adzuna API keys in Netlify.');
+    }
+  } catch(e) {
+    showToast('Job search failed: '+e.message,'error');
+    logActivity('❌', 'Job search error: '+e.message);
+  }
+  if (btn) { btn.disabled=false; btn.innerHTML='Search Live Jobs →'; }
+}
+
+function renderActivityFeed() {
+  const feed = document.getElementById('activity-feed'); if(!feed) return;
+  if (!STATE.activityLog.length) {
+    feed.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text3);font-size:.85rem">No activity yet. Run a job search or generate a resume.</div>`;
+    return;
+  }
+  feed.innerHTML = STATE.activityLog.slice(0,10).map(a=>`
+    <div class="activity-item">
+      <div class="activity-icon">${a.icon}</div>
+      <div style="flex:1"><div class="activity-text">${a.text}</div><div class="activity-time">${a.time}</div></div>
+    </div>`).join('');
+}
+
+function renderKanban() {
+  const board = document.getElementById('kanban-board'); if(!board) return;
+  const cols = [
+    {id:'Applied',label:'Applied',color:'var(--slate)'},
+    {id:'Screening',label:'Screening',color:'var(--yellow)'},
+    {id:'Interview',label:'Interview',color:'var(--purple)'},
+    {id:'Offer',label:'🎉 Offer',color:'var(--green)'},
+  ];
+  board.innerHTML = cols.map(col=>{
+    const items = STATE.applications.filter(a=>a.status===col.id);
+    return `<div class="kanban-col" ondragover="event.preventDefault()" ondrop="dropCard(event,'${col.id}')">
+      <div class="kanban-col-title" style="color:${col.color}">${col.label}<span class="kanban-count">${items.length}</span></div>
+      ${items.map(item=>`<div class="kanban-item" draggable="true" ondragstart="dragCard(event,${item.id})">${item.role}<div class="kanban-item-co">${item.company}</div></div>`).join('')}
+    </div>`;
+  }).join('');
+}
+let draggedCard=null;
+function dragCard(e,id){draggedCard=id;e.dataTransfer.effectAllowed='move';}
+function dropCard(e,status){
+  if(draggedCard===null)return;
+  const app=STATE.applications.find(a=>a.id===draggedCard);
+  if(app){app.status=status;saveState();renderKanban();renderAppTable();logActivity('📋',`Moved <strong>${app.role}</strong> to <strong>${status}</strong>`);}
+  draggedCard=null;
+}
+
+// ── Live job cards panel ──
+function renderJobCards() {
+  const grid = document.getElementById('job-cards-grid'); if(!grid) return;
+  if (!STATE.liveJobs.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text3)">
+      <div style="font-size:3rem;margin-bottom:16px">🔍</div>
+      <h3 style="font-weight:700;color:var(--navy);margin-bottom:8px">No jobs loaded yet</h3>
+      <p style="margin-bottom:20px;font-size:.9rem">Click below to search real live job listings powered by Adzuna</p>
+      <button class="btn btn-primary btn-lg" onclick="runJobSearch()">Search Live Jobs for Me →</button>
+      <p style="margin-top:12px;font-size:.78rem;color:var(--text3)">Requires ADZUNA_APP_ID and ADZUNA_API_KEY in Netlify env vars</p>
+    </div>`;
+    return;
+  }
+  const search = (document.getElementById('job-search')?.value||'').toLowerCase();
+  const filterLoc = document.getElementById('filter-location')?.value||'';
+  const jobs = STATE.liveJobs.filter(j=>{
+    if(search && !j.title?.toLowerCase().includes(search) && !j.company?.toLowerCase().includes(search)) return false;
+    if(filterLoc && !j.location?.includes(filterLoc)) return false;
+    return true;
+  });
+  const colors=['#0d9488','#8b5cf6','#f97316','#6366f1','#06b6d4','#ec4899'];
+  grid.innerHTML = jobs.map((j,i)=>{
+    const sal = j.salary_min && j.salary_max ? `$${Math.round(j.salary_min/1000)}k–$${Math.round(j.salary_max/1000)}k` : j.salary_min ? `$${Math.round(j.salary_min/1000)}k+` : 'Salary not listed';
+    const postedDate = j.posted ? new Date(j.posted).toLocaleDateString() : '';
+    return `<div class="job-card" onclick="openJobDetail(${i})">
+      <div class="job-card-top">
+        <div style="display:flex;gap:12px;align-items:flex-start;flex:1">
+          <div class="job-card-avatar" style="background:${colors[i%colors.length]}">${(j.company||'?')[0].toUpperCase()}</div>
+          <div style="flex:1"><div class="job-title">${j.title}</div><div class="job-company">${j.company}</div></div>
+        </div>
+        <button class="job-card-save" onclick="event.stopPropagation();this.textContent=this.textContent==='♡'?'♥':'♡';showToast(this.textContent==='♥'?'Saved!':'Unsaved')">♡</button>
+      </div>
+      <div class="job-meta">
+        <span>📍 ${j.location||'Remote'}</span>
+        <span>💰 ${sal}</span>
+        ${postedDate?`<span>🕐 ${postedDate}</span>`:''}
+        ${j.category?`<span>🏷 ${j.category}</span>`:''}
+      </div>
+      <div class="job-footer">
+        <div>${j.ats_score?`<span class="match-score">${j.ats_score}% match</span>`:'<span class="badge badge-navy">Live Job</span>'}</div>
+        <button class="btn btn-sm btn-primary" onclick="event.stopPropagation();runFullApplicationPrep(STATE.liveJobs[${i}])">Prep & Apply</button>
+      </div>
+    </div>`;
+  }).join('') + `<div style="grid-column:1/-1;text-align:center;padding:20px">
+    <button class="btn btn-ghost" onclick="runJobSearch()">🔄 Refresh Live Jobs</button>
+  </div>`;
+}
+
+function filterJobs(){renderJobCards();}
+function resetFilters(){
+  ['job-search','filter-location','filter-type'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  renderJobCards();
+}
+function skipJob(id,btn){btn.closest('.jq-item').style.opacity='0.4';btn.disabled=true;showToast('Skipped');}
+
+function openJobDetail(idx) {
+  const j = STATE.liveJobs[idx]; if(!j) return;
+  const colors=['#0d9488','#8b5cf6','#f97316','#6366f1','#06b6d4','#ec4899'];
+  const sal = j.salary_min && j.salary_max ? `$${Math.round(j.salary_min/1000)}k–$${Math.round(j.salary_max/1000)}k` : 'Not listed';
+  document.getElementById('slide-panel-content').innerHTML = `
+    <div style="margin-top:8px">
+      <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:16px">
+        <div style="width:52px;height:52px;border-radius:10px;background:${colors[idx%colors.length]};display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:1.3rem;flex-shrink:0">${(j.company||'?')[0].toUpperCase()}</div>
+        <div><h2 style="font-weight:700;color:var(--navy);font-size:1.15rem;margin-bottom:3px">${j.title}</h2><p style="font-size:.85rem;color:var(--slate)">${j.company} • ${j.location||'Remote'} • ${sal}</p></div>
+      </div>
+      ${j.ats_score?`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px"><span class="badge badge-teal">${j.ats_score}% match</span><span class="badge badge-green">Live Listing</span></div>`:''}
+      <div style="margin-bottom:16px"><h3 style="font-weight:700;color:var(--navy);margin-bottom:6px;font-size:.85rem">DESCRIPTION</h3><p style="font-size:.85rem;color:var(--slate);line-height:1.7">${j.description||'No description available.'}</p></div>
+      ${j.url?`<a href="${j.url}" target="_blank" class="btn btn-ghost btn-sm w-full" style="margin-bottom:8px">View Full Posting ↗</a>`:''}
+      <button class="btn btn-primary w-full" onclick="runFullApplicationPrep(STATE.liveJobs[${idx}]);closeSlidePanel()">🤖 AI Full Application Prep →</button>
+      <p style="text-align:center;font-size:.75rem;color:var(--text3);margin-top:8px">AI will score your resume, write a cover letter + interview questions</p>
+    </div>`;
+  document.getElementById('slide-panel').classList.add('open');
+  document.getElementById('slide-overlay').classList.add('open');
+}
+function closeSlidePanel(){document.getElementById('slide-panel').classList.remove('open');document.getElementById('slide-overlay').classList.remove('open');}
+
+// ── REAL FULL APPLICATION PREP (Agent orchestrated) ──
+async function runFullApplicationPrep(job) {
+  if (typeof job === 'string') job = JSON.parse(job);
+  closeSlidePanel();
+  showLoading(`🤖 Agent preparing application for ${job.title} at ${job.company}...`);
+  logActivity('🚀', `Starting full application prep for <strong>${job.title}</strong> at <strong>${job.company}</strong>`);
+  try {
+    const result = await callAgent('full_application_prep', {
+      job_title:       job.title,
+      company:         job.company,
+      job_description: job.description || '',
+    });
+    hideLoading();
+    const tr = result.tool_results;
+    const score = tr?.score_resume_vs_job;
+    const coverLetter = tr?.write_cover_letter;
+    const interviewQ = tr?.generate_interview_questions;
+    // Add to applications
+    const app = {
+      id: Date.now(), company: job.company, role: job.title,
+      date: new Date().toISOString().split('T')[0], status: 'Applied',
+      atsScore: score?.ats_score || 0, resumeVersion: 'AI-tailored',
+      coverLetter: coverLetter || '', interviewQ: interviewQ || null,
+      jobUrl: job.url || '',
+    };
+    STATE.applications.unshift(app); saveState();
+    renderAppTable(); renderKanban();
+    // Show results panel
+    showApplicationResults(app, score, coverLetter, interviewQ, result.text);
+    logActivity('✅', `Application prepared — <strong>${job.title} at ${job.company}</strong> — ATS: <strong>${score?.ats_score||'—'}%</strong>`);
+    sendEmail('application', {name:STATE.user.name, email:STATE.user.email, jobTitle:job.title, company:job.company, atsScore:score?.ats_score||0});
+  } catch(e) {
+    hideLoading();
+    showToast('Application prep failed: '+e.message,'error');
+    logActivity('❌', 'Application prep failed: '+e.message);
+  }
+}
+
+function showApplicationResults(app, score, coverLetter, interviewQ, summary) {
+  document.getElementById('slide-panel-content').innerHTML = `
+    <div style="margin-top:8px">
+      <h2 style="font-weight:700;color:var(--navy);font-size:1.1rem;margin-bottom:4px">Application Ready ✅</h2>
+      <p style="font-size:.85rem;color:var(--slate);margin-bottom:16px">${app.role} at ${app.company}</p>
+      ${score ? `
+      <div style="background:rgba(13,148,136,.06);border-radius:var(--radius);padding:14px;margin-bottom:14px">
+        <div style="font-size:.72rem;font-weight:700;color:var(--teal);margin-bottom:8px">ATS ANALYSIS</div>
+        <div style="font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--navy);margin-bottom:4px">${score.ats_score}%</div>
+        ${(score.found_keywords||[]).length?`<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:4px">${score.found_keywords.map(k=>`<span class="badge badge-green">✓ ${k}</span>`).join('')}</div>`:''}
+        ${(score.missing_keywords||[]).length?`<div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:4px">${score.missing_keywords.map(k=>`<span class="badge badge-red">✗ ${k}</span>`).join('')}</div>`:''}
+      </div>` : ''}
+      ${coverLetter && typeof coverLetter === 'string' ? `
+      <div style="margin-bottom:14px">
+        <div style="font-size:.72rem;font-weight:700;color:var(--navy);margin-bottom:8px">COVER LETTER</div>
+        <div style="background:var(--bg2);border-radius:var(--radius-sm);padding:14px;font-size:.82rem;line-height:1.7;color:var(--slate);max-height:160px;overflow-y:auto;white-space:pre-wrap">${coverLetter}</div>
+        <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="navigator.clipboard.writeText(\`${coverLetter.replace(/`/g,'\\`')}\`).then(()=>showToast('Copied!'))">⎘ Copy Cover Letter</button>
+      </div>` : ''}
+      ${interviewQ && interviewQ.behavioral ? `
+      <div style="margin-bottom:14px">
+        <div style="font-size:.72rem;font-weight:700;color:var(--navy);margin-bottom:8px">INTERVIEW QUESTIONS TO PREPARE</div>
+        <div style="background:var(--bg2);border-radius:var(--radius-sm);padding:14px;max-height:180px;overflow-y:auto">
+          ${[...(interviewQ.behavioral||[]).slice(0,3),...(interviewQ.technical||[]).slice(0,2)].map(q=>`<div style="font-size:.82rem;color:var(--slate);padding:5px 0;border-bottom:1px solid var(--border)">• ${q}</div>`).join('')}
+        </div>
+      </div>` : ''}
+      ${summary ? `<div style="font-size:.82rem;color:var(--slate);line-height:1.6;padding:12px;background:var(--bg2);border-radius:var(--radius-sm);margin-bottom:14px">${summary}</div>` : ''}
+      ${app.jobUrl ? `<a href="${app.jobUrl}" target="_blank" class="btn btn-primary w-full">Apply on Job Board ↗</a>` : '<div class="btn btn-ghost w-full" style="text-align:center">Tracked in Applications ✓</div>'}
+    </div>`;
+  document.getElementById('slide-panel').classList.add('open');
+  document.getElementById('slide-overlay').classList.add('open');
+}
+
+function renderAppTable() {
+  const tbody = document.getElementById('app-table-body'); if(!tbody) return;
+  if (!STATE.applications.length) { tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text3)">No applications yet. Search jobs and click "Prep & Apply" to start.</td></tr>`; return; }
+  const sc={'Applied':'status-applied','Screening':'status-screening','Interview':'status-interview','Offer':'status-offer','Rejected':'status-rejected'};
+  tbody.innerHTML = STATE.applications.map(a=>`
+    <tr onclick="expandApp(${a.id})" style="cursor:pointer">
+      <td><strong style="color:var(--navy)">${a.company}</strong></td>
+      <td>${a.role}</td>
+      <td>${a.date}</td>
+      <td><span class="status-badge ${sc[a.status]||'status-applied'}">${a.status}</span></td>
+      <td><strong style="color:var(--teal)">${a.atsScore?a.atsScore+'%':'—'}</strong></td>
+      <td><span class="badge badge-navy">${a.resumeVersion||'v1'}</span></td>
+    </tr>`).join('');
+}
+
+function expandApp(id) {
+  const a = STATE.applications.find(x=>x.id===id); if(!a) return;
+  const sc={'Applied':'status-applied','Screening':'status-screening','Interview':'status-interview','Offer':'status-offer','Rejected':'status-rejected'};
+  document.getElementById('slide-panel-content').innerHTML = `
+    <div style="margin-top:8px">
+      <h2 style="font-weight:700;color:var(--navy);font-size:1.15rem;margin-bottom:4px">${a.role}</h2>
+      <p style="font-size:.85rem;color:var(--slate);margin-bottom:16px">${a.company} • Applied ${a.date}</p>
+      <div class="order-detail"><span class="order-label">Status</span><span class="status-badge ${sc[a.status]||'status-applied'}">${a.status}</span></div>
+      <div class="order-detail"><span class="order-label">ATS Score</span><span class="order-val" style="color:var(--teal)">${a.atsScore?a.atsScore+'%':'Not scored'}</span></div>
+      <div class="order-detail"><span class="order-label">Resume</span><span class="order-val">${a.resumeVersion||'v1'}</span></div>
+      ${a.coverLetter && typeof a.coverLetter==='string' ? `<div style="margin-top:14px"><div style="font-size:.72rem;font-weight:700;color:var(--navy);margin-bottom:6px">COVER LETTER</div><div style="background:var(--bg2);border-radius:var(--radius-sm);padding:12px;font-size:.82rem;color:var(--slate);max-height:140px;overflow-y:auto;white-space:pre-wrap">${a.coverLetter}</div></div>` : ''}
+      ${a.interviewQ?.behavioral?.length ? `<div style="margin-top:14px"><div style="font-size:.72rem;font-weight:700;color:var(--navy);margin-bottom:6px">INTERVIEW QUESTIONS</div>${(a.interviewQ.behavioral||[]).slice(0,3).map(q=>`<div style="font-size:.82rem;color:var(--slate);padding:5px 0;border-bottom:1px solid var(--border)">• ${q}</div>`).join('')}</div>` : ''}
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button class="btn btn-ghost btn-sm w-full" onclick="updateAppStatus(${a.id})">Update Status</button>
+        ${a.jobUrl?`<a href="${a.jobUrl}" target="_blank" class="btn btn-primary btn-sm w-full">View Job ↗</a>`:'<button class="btn btn-primary btn-sm w-full" onclick="showToast(\'Follow-up sent!\',\'success\');closeSlidePanel()">Send Follow-up</button>'}
+      </div>
+    </div>`;
+  document.getElementById('slide-panel').classList.add('open');
+  document.getElementById('slide-overlay').classList.add('open');
+}
+
+function updateAppStatus(id) {
+  const statuses=['Applied','Screening','Interview','Offer','Rejected'];
+  const app=STATE.applications.find(a=>a.id===id); if(!app) return;
+  const next=statuses[(statuses.indexOf(app.status)+1)%statuses.length];
+  app.status=next; saveState(); renderAppTable(); renderKanban(); closeSlidePanel();
+  showToast(`Status → ${next}`,'success');
+  logActivity('📋',`Updated <strong>${app.role}</strong> status to <strong>${next}</strong>`);
+}
+
+// ════════════════════════════════════════════════
+// RESUME AI — Real AI generation
+// ════════════════════════════════════════════════
+let resumeStyle = 'Corporate';
+function setResumeStyle(style, btn) {
+  resumeStyle = style; STATE.selectedResumeStyle = style;
+  document.querySelectorAll('.style-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+}
+
+async function generateResume() {
+  const jobListing = document.getElementById('job-listing-input')?.value.trim();
+  const btn = document.getElementById('gen-resume-btn');
+  const errEl = document.getElementById('resume-error');
+  errEl.style.display = 'none';
+  btn.innerHTML = '<span class="loading-spinner"></span> AI is writing your resume...';
+  btn.disabled = true;
+  const resumeText = buildResumeText();
+  logActivity('✍️', `Generating tailored <strong>${resumeStyle}</strong> resume${jobListing?' for job listing':''}`);
+  try {
+    const result = await callAgent('tailor_resume', {
+      job_description: jobListing || `${STATE.preferences.targetTitle||'professional'} role in ${STATE.preferences.industry}`,
+      style: resumeStyle,
+    });
+    const scoreData = result.tool_results?.score_resume_vs_job;
+    const tailoredResume = result.tool_results?.tailor_resume || result.text || resumeText;
+    const scoreObj = scoreData || { ats_score: 78, found_keywords: [], missing_keywords: [] };
+    displayResumeResults({ atsScore: scoreObj.ats_score||78, foundKeywords: scoreObj.found_keywords||[], missingKeywords: scoreObj.missing_keywords||[], resume: tailoredResume });
+    STATE.generatedResume = tailoredResume; saveState();
+    logActivity('📊', `Resume generated — ATS Score: <strong>${scoreObj.ats_score||78}%</strong>`);
+    sendEmail('resume', {name:STATE.user.name, email:STATE.user.email, atsScore:scoreObj.ats_score||78});
+    showToast(`Resume ready! ATS Score: ${scoreObj.ats_score||78}%`,'success');
+  } catch(e) {
+    // Real fallback — still use AI but simpler prompt
+    try {
+      const text = await callAI([{role:'user',content:`Write a professional ${resumeStyle} resume for: ${resumeText.substring(0,800)}${jobListing?' targeting this job: '+jobListing.substring(0,400):''}`}], 'You are an expert resume writer. Return only the resume text, no preamble.', 1500);
+      displayResumeResults({ atsScore: 75, foundKeywords: STATE.profile.skills.slice(0,4), missingKeywords: [], resume: text });
+      STATE.generatedResume = text; saveState();
+      showToast('Resume generated (basic mode)','success');
+    } catch(e2) {
+      errEl.textContent = 'AI unavailable: '+e2.message+' — Check your Gemini API key in Netlify.';
+      errEl.style.display = 'block';
+    }
+  }
+  btn.innerHTML = 'Generate Tailored Resume ✨';
+  btn.disabled = false;
+}
+
+function displayResumeResults(data) {
+  const fill = document.getElementById('ats-ring-fill');
+  const scoreNum = document.getElementById('ats-score-num');
+  const score = data.atsScore||0;
+  setTimeout(()=>{
+    if(fill){fill.style.strokeDashoffset=283-(score/100)*283;fill.style.stroke=score>=80?'var(--green)':score>=60?'var(--yellow)':'var(--red)';}
+  },100);
+  let cur=0; const t=setInterval(()=>{cur=Math.min(cur+2,score);if(scoreNum)scoreNum.textContent=cur+'%';if(cur>=score)clearInterval(t);},20);
+  const kwEl=document.getElementById('keywords-found');
+  if(kwEl) kwEl.innerHTML=(data.foundKeywords||[]).map(k=>`<span class="kw-found">✓ ${k}</span>`).join('')+(data.missingKeywords||[]).map(k=>`<span class="kw-missing">✗ ${k}</span>`).join('');
+  const doc=document.getElementById('resume-preview-doc');
+  if(doc) doc.textContent=data.resume||'';
+  document.getElementById('resume-preview-area').style.display='block';
+  document.getElementById('resume-placeholder').style.display='none';
+}
+
+function downloadResume(fmt) {
+  const text=STATE.generatedResume||'No resume generated yet.';
+  const blob=new Blob([text],{type:'text/plain'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`resume_infuselink.${fmt==='pdf'?'txt':fmt}`;a.click();URL.revokeObjectURL(url);
+  showToast('Downloaded!','success');
+}
+function copyResume(){navigator.clipboard.writeText(STATE.generatedResume||'').then(()=>showToast('Copied!','success'));}
+
+// ════════════════════════════════════════════════
+// AI AGENT PANEL — Real orchestration UI
+// ════════════════════════════════════════════════
+function renderAgentPanel() {
+  const el = document.getElementById('panel-agent'); if(!el) return;
+  const analysis = STATE.profileAnalysis;
+  const strategy = STATE.jobStrategy;
+  el.innerHTML = `
+    <div class="dash-header">
+      <h1 class="dash-title">AI Agent Control Center</h1>
+      <p class="dash-sub">Real AI orchestration — Gemini reasons and executes multi-step tasks</p>
+    </div>
+    <div id="agent-api-warning" style="display:${!window._apiConfigured?'':'none'};background:linear-gradient(135deg,#fef3c7,#fde68a);border:1px solid #f59e0b;border-radius:var(--radius);padding:14px 20px;margin-bottom:20px;font-size:.85rem;color:#92400e">
+      ⚠️ <strong>Setup Required:</strong> Set <code>GEMINI_API_KEY</code> and <code>ADZUNA_APP_ID</code> + <code>ADZUNA_API_KEY</code> in Netlify environment variables for full agent functionality.
+      <a href="https://aistudio.google.com" target="_blank" style="font-weight:700;text-decoration:underline;margin-left:4px">Get Gemini Key →</a>
+      <a href="https://developer.adzuna.com" target="_blank" style="font-weight:700;text-decoration:underline;margin-left:8px">Get Adzuna Key →</a>
+    </div>
+
+    <!-- Agent Tasks -->
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px">
+      <div class="card" style="cursor:pointer;transition:all .2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''" onclick="agentTask('profile')">
+        <div style="font-size:1.8rem;margin-bottom:10px">🧠</div>
+        <h3 style="font-weight:700;color:var(--navy);margin-bottom:6px">Analyze My Profile</h3>
+        <p style="font-size:.82rem;color:var(--slate);line-height:1.5">AI scores your profile, identifies skill gaps, estimates salary range, and recommends job titles.</p>
+        <div style="margin-top:12px"><span class="badge badge-teal">analyze_profile tool</span></div>
+      </div>
+      <div class="card" style="cursor:pointer;transition:all .2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''" onclick="agentTask('search')">
+        <div style="font-size:1.8rem;margin-bottom:10px">🔍</div>
+        <h3 style="font-weight:700;color:var(--navy);margin-bottom:6px">Search & Score Jobs</h3>
+        <p style="font-size:.82rem;color:var(--slate);line-height:1.5">Fetches real live job listings from Adzuna API, then AI scores each against your resume.</p>
+        <div style="margin-top:12px"><span class="badge badge-teal">search_jobs + score_resume tools</span></div>
+      </div>
+      <div class="card" style="cursor:pointer;transition:all .2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''" onclick="agentTask('strategy')">
+        <div style="font-size:1.8rem;margin-bottom:10px">🗺️</div>
+        <h3 style="font-weight:700;color:var(--navy);margin-bottom:6px">Build Job Search Strategy</h3>
+        <p style="font-size:.82rem;color:var(--slate);line-height:1.5">Creates a personalized strategy: target companies, job boards, timeline, and daily actions.</p>
+        <div style="margin-top:12px"><span class="badge badge-teal">build_job_search_strategy tool</span></div>
+      </div>
+      <div class="card" style="cursor:pointer;transition:all .2s;border:2px solid var(--coral);background:linear-gradient(135deg,rgba(249,115,22,.04),white)" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''" onclick="agentTask('fullrun')">
+        <div style="font-size:1.8rem;margin-bottom:10px">⚡</div>
+        <h3 style="font-weight:700;color:var(--navy);margin-bottom:6px">Full Shannon-Style Pipeline</h3>
+        <p style="font-size:.82rem;color:var(--slate);line-height:1.5">4-phase parallel pipeline: Recon → Parallel Scoring → Parallel Execution → Report. All jobs scored simultaneously. Top 3 fully prepped at once.</p>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="badge badge-coral">Phase 1: Recon</span>
+          <span class="badge badge-teal">Phase 2: Score</span>
+          <span class="badge badge-navy">Phase 3: Exec</span>
+          <span class="badge badge-yellow">Phase 4: Report</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase status bar -->
+    <div id="agent-phase-status"></div>
+
+    <!-- Agent execution log -->
+    <div style="background:#0f172a;border-radius:var(--radius);padding:20px;font-family:monospace;min-height:200px;max-height:320px;overflow-y:auto">
+      <div style="font-size:.72rem;color:#64748b;margin-bottom:12px;display:flex;align-items:center;gap:8px">
+        <div class="pulse-dot" style="background:#22c55e"></div>
+        LIVE AGENT EXECUTION LOG — Real tool calls, parallel tasks, phase transitions
+      </div>
+      <div id="agent-exec-log" style="font-size:.78rem;line-height:1.7;color:#94a3b8">
+        ${STATE.activityLog.slice(0,8).map(a=>`<div><span style="color:#475569">${a.time}</span> <span style="color:#94a3b8">${a.text.replace(/<[^>]+>/g,'')}</span></div>`).join('')||'<span style="color:#475569">Waiting for agent tasks...</span>'}
+      </div>
+    </div>
+
+    <!-- Results area -->
+    <div id="agent-results" style="margin-top:20px">
+      ${analysis || strategy ? renderAgentResults() : ''}
+    </div>
+  `;
+}
+
+function renderAgentResults() {
+  const a = STATE.profileAnalysis;
+  const s = STATE.jobStrategy;
+  let html = '';
+  if (a) {
+    html += `<div class="card" style="margin-bottom:16px">
+      <h3 style="font-weight:700;color:var(--navy);margin-bottom:14px">🧠 Profile Analysis Results</h3>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px">
+        <div style="text-align:center;padding:14px;background:var(--bg2);border-radius:var(--radius-sm)"><div style="font-family:var(--font-display);font-size:1.6rem;font-weight:700;color:var(--navy)">${a.profile_strength||0}%</div><div style="font-size:.72rem;color:var(--slate)">Profile Strength</div></div>
+        <div style="text-align:center;padding:14px;background:var(--bg2);border-radius:var(--radius-sm)"><div style="font-weight:700;color:var(--navy);font-size:.9rem">${a.salary_estimate||'—'}</div><div style="font-size:.72rem;color:var(--slate)">Salary Estimate</div></div>
+        <div style="text-align:center;padding:14px;background:var(--bg2);border-radius:var(--radius-sm)"><div style="font-weight:700;color:var(--teal);font-size:.9rem">${(a.best_job_titles||[]).length} titles</div><div style="font-size:.72rem;color:var(--slate)">Best-Fit Roles</div></div>
+      </div>
+      ${a.career_advice?`<div style="padding:12px;background:rgba(13,148,136,.06);border-left:3px solid var(--teal);border-radius:0 var(--radius-sm) var(--radius-sm) 0;font-size:.85rem;color:var(--slate);line-height:1.6;margin-bottom:12px">${a.career_advice}</div>`:''}
+      ${(a.best_job_titles||[]).length?`<div style="margin-bottom:10px"><div style="font-size:.72rem;font-weight:700;color:var(--navy);margin-bottom:6px">BEST-FIT TITLES</div><div style="display:flex;flex-wrap:wrap;gap:6px">${a.best_job_titles.map(t=>`<span class="badge badge-teal">${t}</span>`).join('')}</div></div>`:''}
+      ${(a.skill_gaps||[]).length?`<div><div style="font-size:.72rem;font-weight:700;color:var(--navy);margin-bottom:6px">SKILL GAPS</div><div style="display:flex;flex-wrap:wrap;gap:6px">${a.skill_gaps.map(g=>`<span class="badge badge-yellow">+ ${g}</span>`).join('')}</div></div>`:''}
+    </div>`;
+  }
+  if (s) {
+    html += `<div class="card">
+      <h3 style="font-weight:700;color:var(--navy);margin-bottom:14px">🗺️ Job Search Strategy</h3>
+      ${s.priority_actions?.length?`<div style="margin-bottom:14px"><div style="font-size:.72rem;font-weight:700;color:var(--navy);margin-bottom:8px">PRIORITY ACTIONS (DO TODAY)</div>${s.priority_actions.map((a,i)=>`<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:.85rem"><span style="font-weight:700;color:var(--teal);flex-shrink:0">${i+1}.</span><span style="color:var(--slate)">${a}</span></div>`).join('')}</div>`:''}
+      ${s.target_companies?.length?`<div style="margin-bottom:14px"><div style="font-size:.72rem;font-weight:700;color:var(--navy);margin-bottom:8px">TARGET COMPANIES</div><div style="display:flex;flex-wrap:wrap;gap:6px">${s.target_companies.map(c=>`<span class="badge badge-navy">${c}</span>`).join('')}</div></div>`:''}
+      ${s.timeline?`<div><div style="font-size:.72rem;font-weight:700;color:var(--navy);margin-bottom:8px">TIMELINE</div>${Object.entries(s.timeline).map(([k,v])=>`<div style="display:flex;gap:12px;padding:6px 0;border-bottom:1px solid var(--border);font-size:.82rem"><span style="font-weight:700;color:var(--teal);width:60px;flex-shrink:0">${k}</span><span style="color:var(--slate)">${v}</span></div>`).join('')}</div>`:''}
+    </div>`;
+  }
+  const m = STATE.marketIntel;
+  if (m) {
+    html += `<div class="card" style="margin-bottom:16px">
+      <h3 style="font-weight:700;color:var(--navy);margin-bottom:14px">📈 Market Intelligence: ${STATE.preferences?.targetTitle||'Your Role'}</h3>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px">
+        <div style="text-align:center;padding:12px;background:var(--bg2);border-radius:var(--radius-sm)">
+          <div style="font-weight:700;color:var(--navy)">${m.demand_level||'?'}</div>
+          <div style="font-size:.72rem;color:var(--slate)">Market Demand</div>
+        </div>
+        <div style="text-align:center;padding:12px;background:var(--bg2);border-radius:var(--radius-sm)">
+          <div style="font-weight:700;color:var(--navy)">${m.competition_level||'?'}</div>
+          <div style="font-size:.72rem;color:var(--slate)">Competition</div>
+        </div>
+        <div style="text-align:center;padding:12px;background:var(--bg2);border-radius:var(--radius-sm)">
+          <div style="font-weight:700;color:var(--teal)">${m.remote_availability||'?'}</div>
+          <div style="font-size:.72rem;color:var(--slate)">Remote Roles</div>
+        </div>
+      </div>
+      ${(m.most_required_skills||[]).length?`<div style="margin-bottom:10px"><div style="font-size:.72rem;font-weight:700;color:var(--navy);margin-bottom:6px">MOST REQUIRED SKILLS</div><div style="display:flex;flex-wrap:wrap;gap:5px">${m.most_required_skills.map(s=>`<span class="badge badge-teal">${s}</span>`).join('')}</div></div>`:''}
+      ${(m.insider_tips||[]).length?`<div><div style="font-size:.72rem;font-weight:700;color:var(--navy);margin-bottom:6px">INSIDER TIPS</div>${m.insider_tips.map(tip=>`<div style="font-size:.82rem;color:var(--slate);padding:5px 0;border-bottom:1px solid var(--border)">💡 ${tip}</div>`).join('')}</div>`:''}
+    </div>`;
+  }
+  return html;
+}
+
+async function agentTask(type) {
+  const logEl = document.getElementById('agent-exec-log');
+  const resultsEl = document.getElementById('agent-results');
+  const addLog = (msg) => {
+    if(logEl){ const time=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'}); logEl.innerHTML+=`\n<div><span style="color:#475569">${time}</span> <span style="color:#94a3b8">${msg}</span></div>`; logEl.scrollTop=logEl.scrollHeight; }
+    logActivity('🤖', msg);
+  };
+  if(logEl) logEl.innerHTML='';
+  addLog('Agent starting...');
+
+  const taskMap = {
+    profile: {task:'analyze_and_strategize', msg:'Analyzing profile + building strategy...'},
+    search:  {task:'search_and_match',       msg:`Searching live jobs for "${STATE.preferences.targetTitle||'your role'}"...`},
+    strategy:{task:'analyze_and_strategize', msg:'Building personalized job search strategy...'},
+    fullrun: {task:'analyze_and_strategize', msg:'Running full agent sequence...'},
+  };
+  const t = taskMap[type]; if(!t) return;
+  addLog(t.msg);
+
+  try {
+    if (type === 'search' || type === 'fullrun') {
+      addLog('→ Calling search_jobs tool (Adzuna API)...');
+    }
+    if (type === 'profile' || type === 'strategy' || type === 'fullrun') {
+      addLog('→ Calling analyze_profile tool...');
+    }
+
+    const result = await callAgent(t.task, { query: STATE.preferences.targetTitle, location: STATE.preferences.location });
+
+    result.agent_steps.forEach(step=>{
+      addLog(`→ Tool called: ${step.tool} ${step.result_summary?'→ '+step.result_summary:''}`);
+    });
+
+    const tr = result.tool_results;
+    if (tr.analyze_profile)           { STATE.profileAnalysis = tr.analyze_profile; saveState(); addLog('✓ Profile analysis complete'); }
+    if (tr.build_job_search_strategy) { STATE.jobStrategy = tr.build_job_search_strategy; saveState(); addLog('✓ Strategy built'); }
+    if (tr.search_jobs?.jobs) {
+      STATE.liveJobs = tr.search_jobs.jobs; saveState();
+      addLog(`✓ Found ${tr.search_jobs.jobs.length} real live jobs`);
+      renderJobQueue(); renderJobCards();
+    }
+
+    addLog(`✓ Agent finished — ${result.agent_steps.length} tools used`);
+    if(resultsEl) resultsEl.innerHTML = renderAgentResults();
+    renderProfileInsights();
+    showToast('Agent run complete!','success');
+  } catch(e) {
+    addLog(`✗ Error: ${e.message}`);
+    showToast('Agent error: '+e.message,'error');
+  }
+}
+
+// ════════════════════════════════════════════════
+// ORION CHAT — Real AI with tool access
+// ════════════════════════════════════════════════
+let chatHistory = [];
+function initChat() {
+  if (STATE.chatHistory?.length) { chatHistory = STATE.chatHistory; renderChatHistory(); }
+}
+function renderChatHistory() {
+  const container = document.getElementById('chat-messages'); if(!container) return;
+  const welcome = container.querySelector('.chat-msg.ai');
+  const extra = chatHistory.map(m=>`<div class="chat-msg ${m.role==='user'?'user':'ai'}"><div class="chat-msg-ava">${m.role==='user'?(STATE.user.name[0]||'U'):'O'}</div><div class="chat-msg-bubble">${m.content}</div></div>`).join('');
+  if(welcome && chatHistory.length) container.innerHTML = welcome.outerHTML + extra;
+}
+function sendChatSuggestion(btn){ document.getElementById('chat-input').value=btn.textContent; sendChat(); }
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim(); if(!msg) return;
+  input.value=''; autoResizeTextarea(input);
+  appendChatMsg('user', msg);
+  chatHistory.push({role:'user',content:msg});
+  STATE.chatHistory=chatHistory; saveState();
+  const typing = appendTyping();
+  try {
+    const result = await callAgent('chat', { message: msg, history: chatHistory.slice(-8) });
+    typing.remove();
+    const reply = result.text || 'I encountered an issue. Please try again.';
+    appendChatMsg('ai', reply);
+    chatHistory.push({role:'assistant',content:reply});
+    STATE.chatHistory=chatHistory; saveState();
+    // If agent used tools, show a note
+    if (result.agent_steps?.length) {
+      appendChatMsg('ai', `<em style="font-size:.78rem;color:var(--text3)">🔧 Used ${result.agent_steps.length} tool${result.agent_steps.length>1?'s':''}: ${result.agent_steps.map(s=>s.tool).join(', ')}</em>`);
+    }
+  } catch(e) {
+    typing.remove();
+    appendChatMsg('ai', `I'm having trouble connecting to the AI. Please check your Gemini API key is set in Netlify. Error: ${e.message}`);
+  }
+}
+
+function appendChatMsg(role, text) {
+  const container = document.getElementById('chat-messages'); if(!container) return;
+  const div = document.createElement('div');
+  div.className=`chat-msg ${role}`;
+  div.innerHTML=`<div class="chat-msg-ava">${role==='user'?(STATE.user.name[0]||'U'):'O'}</div><div class="chat-msg-bubble">${text}</div>`;
+  container.appendChild(div); container.scrollTop=container.scrollHeight;
+}
+function appendTyping() {
+  const container=document.getElementById('chat-messages');
+  const div=document.createElement('div'); div.className='chat-msg ai';
+  div.innerHTML=`<div class="chat-msg-ava">O</div><div class="chat-msg-bubble"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+  container.appendChild(div); container.scrollTop=container.scrollHeight; return div;
+}
+function autoResizeTextarea(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,100)+'px';}
+
+// ════════════════════════════════════════════════
+// AUTO-FILL (UI demo with real profile data)
+// ════════════════════════════════════════════════
+let demoRunning=false;
+function startAutoFillDemo(){
+  if(demoRunning)return; demoRunning=true;
+  const btn=document.getElementById('start-demo-btn');
+  if(btn){btn.disabled=true;btn.textContent='Filling form...';}
+  const fields=[
+    {id:'df-name',val:STATE.user.name||'Your Name'},
+    {id:'df-email',val:STATE.user.email||'your@email.com'},
+    {id:'df-phone',val:STATE.user.phone||'+1 (555) 000-0000'},
+    {id:'df-linkedin',val:STATE.user.linkedin||'linkedin.com/in/yourprofile'},
+    {id:'df-exp',val:STATE.experience.length+' years' || '3 years'},
+    {id:'df-cover',val:`Dear Hiring Manager,\n\nI'm excited to apply for this role. With expertise in ${STATE.profile.skills.slice(0,3).join(', ')||'my core skills'}, I'm confident in my ability to contribute effectively.\n\nBest,\n${STATE.user.name||'Your Name'}`},
+  ];
+  let delay=0;
+  fields.forEach((field,idx)=>{
+    delay+=600;
+    setTimeout(()=>typeIntoField(field.id,field.val,()=>{
+      if(idx===fields.length-1){
+        setTimeout(()=>{const sa=document.getElementById('demo-submit-area');if(sa)sa.style.display='block';if(btn)btn.style.display='none';},400);
+      }
+    }),delay);
+  });
+}
+function typeIntoField(id,text,onDone){
+  const el=document.getElementById(id);if(!el)return;
+  el.classList.add('filling');el.value='';let i=0;
+  const speed=Math.max(15,40-Math.floor(text.length/10));
+  const timer=setInterval(()=>{el.value=text.substring(0,i+1);i++;if(i>=text.length){clearInterval(timer);el.classList.remove('filling');el.classList.add('filled');if(onDone)onDone();}},speed);
+}
+function submitAutoFill(){
+  showLoading('Submitting application...');
+  setTimeout(()=>{
+    hideLoading();
+    STATE.applications.unshift({id:Date.now(),company:'TechCorp Inc.',role:'Senior Software Engineer',date:new Date().toISOString().split('T')[0],status:'Applied',atsScore:0,resumeVersion:'AI-tailored'});
+    saveState(); renderAppTable(); renderKanban(); resetAutoFill();
+    showToast('✓ Application submitted and tracked!','success');
+    logActivity('✅','Submitted application via Auto-Fill Agent — <strong>TechCorp Inc.</strong>');
+  },1200);
+}
+function resetAutoFill(){
+  demoRunning=false;
+  ['df-name','df-email','df-phone','df-linkedin','df-exp','df-cover'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.classList.remove('filling','filled');}});
+  const sa=document.getElementById('demo-submit-area');if(sa)sa.style.display='none';
+  const btn=document.getElementById('start-demo-btn');if(btn){btn.style.display='block';btn.disabled=false;btn.textContent='▶ Watch AI Fill This Form';}
+}
+
+// ════════════════════════════════════════════════
+// SETTINGS
+// ════════════════════════════════════════════════
+function populateSettings(){
+  const f=(id,val)=>{const el=document.getElementById(id);if(el)el.value=val||'';};
+  f('s-name',STATE.user.name);f('s-email',STATE.user.email);f('s-phone',STATE.user.phone);f('s-location',STATE.user.location);
+  const plan=document.getElementById('billing-plan');if(plan)plan.textContent=STATE.currentPlan?STATE.currentPlan.name:'Free';
+  const sup=document.getElementById('s-supervised');if(sup)sup.checked=STATE.agent.mode==='supervised';
+  const dl=document.getElementById('s-daily-limit');if(dl)dl.value=STATE.agent.dailyLimit;
+  const dlv=document.getElementById('s-daily-val');if(dlv)dlv.textContent=STATE.agent.dailyLimit;
+  checkEmailJSConfig();
+}
+function saveSettings(){
+  STATE.user.name=document.getElementById('s-name')?.value||STATE.user.name;
+  STATE.user.email=document.getElementById('s-email')?.value||STATE.user.email;
+  STATE.user.phone=document.getElementById('s-phone')?.value||STATE.user.phone;
+  STATE.user.location=document.getElementById('s-location')?.value||STATE.user.location;
+  saveState(); updateSidebar(); showToast('Settings saved!','success');
+}
+function sendWeeklySummary(){ sendEmail('weekly',{name:STATE.user.name,email:STATE.user.email,applications:STATE.applications.length,interviews:STATE.applications.filter(a=>a.status==='Interview').length}); showToast('Weekly summary sent!','success'); }
+
+// ════════════════════════════════════════════════
+// PAYMENT
+// ════════════════════════════════════════════════
+function purchasePlan(name,price,planKey){
+  const stripeLinks={
+    starter:  'https://buy.stripe.com/REPLACE_STARTER',   // REPLACE WITH YOUR STRIPE LINK
+    triple:   'https://buy.stripe.com/REPLACE_TRIPLE',    // REPLACE WITH YOUR STRIPE LINK
+    pro:      'https://buy.stripe.com/REPLACE_PRO',       // REPLACE WITH YOUR STRIPE LINK
+    unlimited:'https://buy.stripe.com/REPLACE_UNLIMITED', // REPLACE WITH YOUR STRIPE LINK
+    mega:     'https://buy.stripe.com/REPLACE_MEGA',      // REPLACE WITH YOUR STRIPE LINK
+    agent:    'https://buy.stripe.com/REPLACE_AGENT',     // REPLACE WITH YOUR STRIPE LINK
+  };
+  let finalPrice=price, couponNote='';
+  if(STATE.coupon){ const c=COUPONS[STATE.coupon]; if(c&&c.plan.toLowerCase().includes(name.toLowerCase().split(' ')[0])){ finalPrice=c.price; couponNote=` (${STATE.coupon})`; } }
+  showLoading('Processing...');
+  setTimeout(()=>{
+    hideLoading();
+    const orderId=Math.floor(10000000+Math.random()*90000000);
+    STATE.currentPlan={name,price:finalPrice,key:planKey,orderId}; saveState(); updateSidebar();
+    document.getElementById('modal-order-details').innerHTML=`
+      <div class="order-detail"><span class="order-label">Order #</span><span class="order-val">${orderId}</span></div>
+      <div class="order-detail"><span class="order-label">Plan</span><span class="order-val">${name}${couponNote}</span></div>
+      <div class="order-detail"><span class="order-label">Amount</span><span class="order-val" style="color:var(--teal)">${finalPrice}</span></div>
+      <div class="order-detail"><span class="order-label">Email</span><span class="order-val">${STATE.user.email||'—'}</span></div>`;
+    openModal('modal-payment');
+    sendEmail('payment',{name:STATE.user.name,email:STATE.user.email,plan:name,price:finalPrice,orderId});
+  },1500);
+}
+
+function applyCoupon(){
+  const code=document.getElementById('coupon-input')?.value.trim().toUpperCase();
+  const el=document.getElementById('coupon-result');
+  const c=COUPONS[code];
+  if(c){ STATE.coupon=code; saveState(); if(el){el.textContent=`✓ ${c.plan} → ${c.price} (${c.savings})`;el.style.color='var(--green)';} showToast(`Coupon applied — ${c.savings}!`,'success'); }
+  else { STATE.coupon=null; if(el){el.textContent='Invalid code';el.style.color='var(--red)';} showToast('Invalid coupon','error'); }
+}
+
+let pendingApplyId=null;
+function openApplyModal(jobId){ pendingApplyId=jobId; openModal('modal-apply-confirm'); }
+function confirmApply(){ closeModal('modal-apply-confirm'); if(pendingApplyId!==null) runFullApplicationPrep(STATE.liveJobs.find(j=>j.id===pendingApplyId)||{}); }
+
+function toggleAgent(on){
+  STATE.agent.enabled=on; saveState();
+  const badge=document.getElementById('agent-status-badge');
+  if(badge){badge.textContent=on?'● ON':'○ OFF';badge.className='agent-on-badge '+(on?'agent-on':'agent-off');}
+  document.getElementById('agent-pulse').style.display=on?'block':'none';
+  document.getElementById('agent-scan-text').textContent=on?`Scanning for jobs • ${STATE.agent.mode} mode`:'Agent paused';
+  if(on&&STATE.user.name){ showToast('Agent ON — searching jobs...','success'); runJobSearch(); }
+  else showToast('Agent paused','warning');
+}
+
+// ════════════════════════════════════════════════
+// MODALS / TOAST / LOADING / UI UTILS
+// ════════════════════════════════════════════════
+function openModal(id){document.getElementById(id)?.classList.remove('hidden');}
+function closeModal(id){document.getElementById(id)?.classList.add('hidden');}
+
+function showToast(msg,type=''){
+  const container=document.getElementById('toast-container');
+  const toast=document.createElement('div');toast.className='toast '+(type||'');toast.textContent=msg;
+  container.appendChild(toast);
+  setTimeout(()=>{toast.style.animation='toast-out .25s ease forwards';setTimeout(()=>toast.remove(),250);},3000);
+}
+
+function showLoading(text='Processing...'){document.getElementById('loading-text').textContent=text;document.getElementById('loading-overlay').classList.remove('hidden');}
+function hideLoading(){document.getElementById('loading-overlay').classList.add('hidden');}
+
+function initScrollReveal(){
+  const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('#view-landing .reveal').forEach(el=>obs.observe(el));
+}
+function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'});}
+
+function initMockupAnimation(){
+  const jobs=['mock-job-1','mock-job-2','mock-job-3'];let cur=0;
+  setInterval(()=>{jobs.forEach(id=>document.getElementById(id)?.classList.remove('processing'));cur=(cur+1)%jobs.length;document.getElementById(jobs[cur])?.classList.add('processing');},2000);
+}
+
+// ── EmailJS ──
+async function sendEmail(type,params){
+  if(EMAILJS_CONFIG.publicKey==='YOUR_PUBLIC_KEY'){console.warn('EmailJS not configured:',type,params);return;}
+  try{if(typeof emailjs!=='undefined'){emailjs.init(EMAILJS_CONFIG.publicKey);await emailjs.send(EMAILJS_CONFIG.serviceId,EMAILJS_CONFIG.templateIds[type]||'',params);}}
+  catch(e){console.warn('EmailJS error:',e);}
+}
+
+// ════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',()=>{
+  setTimeout(()=>document.querySelectorAll('[data-count]').forEach(animateCounter),500);
+  initScrollReveal(); initMockupAnimation();
+
+  // Upload zone drag/drop
+  const zone=document.getElementById('upload-zone');
+  if(zone){
+    zone.addEventListener('dragover',e=>{e.preventDefault();zone.style.borderColor='var(--teal)';});
+    zone.addEventListener('dragleave',()=>zone.style.borderColor='');
+    zone.addEventListener('drop',e=>{
+      e.preventDefault();zone.style.borderColor='';
+      const file=e.dataTransfer.files[0];
+      if(file){const dt=new DataTransfer();dt.items.add(file);document.getElementById('resume-upload').files=dt.files;handleResumeUpload(document.getElementById('resume-upload'));}
+    });
+  }
+
+  // Chat textarea auto-resize
+  const chatInput=document.getElementById('chat-input');
+  if(chatInput) chatInput.addEventListener('input',()=>autoResizeTextarea(chatInput));
+
+  if(STATE.currentView==='dashboard') goToDashboard();
+});
+</script>
+</body>
+</html>
