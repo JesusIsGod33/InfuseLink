@@ -1894,11 +1894,12 @@ Return ONLY valid JSON, no markdown, no explanation:
 }`;
 
   try {
-    // Calls our secure Netlify function — API key never exposed in browser
     const res = await fetch('/.netlify/functions/resume', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
         messages: [{ role: 'user', content: prompt }]
       })
     });
@@ -2038,6 +2039,4 @@ renderExps();
 updateStepper(1);
 </script>
 </body>
-</html>
-
 </html>
