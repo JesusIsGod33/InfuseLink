@@ -1,0 +1,24 @@
+name: sigma_nexus_swarm
+on: [push]
+jobs:
+  swarm:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node_id: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Execute and Report
+        env:
+          GH_TOKEN: ${{ secrets.MESH_TOKEN }} 
+        run: |
+          lscpu > node_${{ matrix.node_id }}_specs.txt
+          git config --global user.email "nexus@mesh.local"
+          git config --global user.name "SigmaNexus"
+          
+          sleep $(( (RANDOM % 30) + 1 ))
+          
+          git pull --rebase origin main
+          git add .
+          git commit -m "Node ${{ matrix.node_id }} reporting" || exit 0
+          git push https://JesusIsGod33:${GH_TOKEN}@github.com/JesusIsGod33/InfuseLink.git main
