@@ -1,43 +1,38 @@
 import fs from 'fs';
 import path from 'path';
 
-// Define a physical file path inside the Devin sandbox storage space
 const STATE_FILE_PATH = path.join(process.cwd(), 'data', 'system_events.json');
+
+export type EventType = 'COMMAND' | 'NETWORK_SIGNAL' | 'ERROR' | 'SYSTEM_UPGRADE';
 
 export interface LocalEvent {
   id: string;
   nodeId: string;
   message: string;
   timestamp: string;
-  type?: string;
+  type: EventType;
 }
 
-// Ensure the local storage file and data directory exist safely
-function initializeStorage() {
+function initStorage() {
   const dir = path.dirname(STATE_FILE_PATH);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-  if (!fs.existsSync(STATE_FILE_PATH)) {
-    fs.writeFileSync(STATE_FILE_PATH, JSON.stringify([]), 'utf-8');
-  }
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  if (!fs.existsSync(STATE_FILE_PATH)) fs.writeFileSync(STATE_FILE_PATH, JSON.stringify([]), 'utf-8');
 }
 
 export async function readLocalLogs(): Promise<LocalEvent[]> {
-  initializeStorage();
+  initStorage();
   try {
     const content = fs.readFileSync(STATE_FILE_PATH, 'utf-8');
     return JSON.parse(content || '[]');
-  } catch (error) {
-    console.error("STATE_READ_FAULT:", error);
+  } catch {
     return [];
   }
 }
 
-export async function writeLocalLog(nodeId: string, message: string, type = 'LOG') {
-  initializeStorage();
+export async function writeLocalLog(nodeId: string, message: string, type: EventType = 'COMMAND') {
+  initStorage();
   try {
-    const currentLogs = await readLocalLogs();
+    const logs = await readLocalLogs();
     const newEntry: LocalEvent = {
       id: Math.random().toString(36).substring(2, 9),
       nodeId,
@@ -45,12 +40,10 @@ export async function writeLocalLog(nodeId: string, message: string, type = 'LOG
       timestamp: new Date().toLocaleTimeString(),
       type
     };
-
-    // Prepend to keep latest events at the top of the stream
-    const updatedLogs = [newEntry, ...currentLogs].slice(0, 50);
-    fs.writeFileSync(STATE_FILE_PATH, JSON.stringify(updatedLogs, null, 2), 'utf-8');
+    const updated = [newEntry, ...logs].slice(0, 50);
+    fs.writeFileSync(STATE_FILE_PATH, JSON.stringify(updated, null, 2), 'utf-8');
     return newEntry;
-  } catch (error) {
-    console.error("STATE_WRITE_FAULT:", error);
+  } catch (err) {
+    console.error("STATE_WRITE_FAULT:", err);
   }
 }
