@@ -1,6 +1,7 @@
 'use client';
 
-import { dispatchMandate } from '@/app/actions/mesh-actions';
+import { dispatchMandate, dispatchMeshDirective } from '@/app/actions/mesh-actions';
+import type { MeshCommandType } from '@/app/actions/mesh-actions';
 import { useTransition } from 'react';
 
 interface MatrixDomain {
@@ -60,6 +61,20 @@ const DOMAINS: MatrixDomain[] = [
   },
 ];
 
+interface MeshRpcCommand {
+  id: MeshCommandType;
+  label: string;
+  nodeId: string;
+}
+
+const MESH_RPC_COMMANDS: MeshRpcCommand[] = [
+  { id: 'PING_GATEWAY', label: 'Ping Gateway', nodeId: 'NEXUS_CORE_01' },
+  { id: 'SYSTEM_RESOURCES', label: 'Sys Resources', nodeId: 'NEXUS_CORE_01' },
+  { id: 'NET_STAT_AUDIT', label: 'Net Stat Audit', nodeId: 'NEXUS_CORE_01' },
+  { id: 'RUN_DNS_LOOKUP', label: 'DNS Lookup', nodeId: 'NEXUS_CORE_01' },
+  { id: 'AUDIT_STORAGE', label: 'Audit Storage', nodeId: 'NEXUS_CORE_01' },
+];
+
 const DOMAIN_STYLES: Record<string, { border: string; text: string; hover: string; heading: string }> = {
   teal:    { border: 'border-teal-900',    text: 'text-teal-400',    hover: 'hover:bg-teal-900/30',    heading: 'text-teal-600' },
   yellow:  { border: 'border-yellow-900',  text: 'text-yellow-400',  hover: 'hover:bg-yellow-900/30',  heading: 'text-yellow-600' },
@@ -73,6 +88,12 @@ export default function SovereignMatrix() {
   const triggerAction = (name: string) => {
     startTransition(async () => {
       await dispatchMandate(name);
+    });
+  };
+
+  const triggerMeshRpc = (nodeId: string, task: MeshCommandType) => {
+    startTransition(async () => {
+      await dispatchMeshDirective(nodeId, { task });
     });
   };
 
@@ -100,6 +121,24 @@ export default function SovereignMatrix() {
           </div>
         );
       })}
+
+      <div>
+        <h3 className="text-[9px] text-purple-600 uppercase tracking-[0.25em] mb-2">
+          MESH RPC // NEXUS_CORE_01
+        </h3>
+        <div className="grid grid-cols-5 gap-1">
+          {MESH_RPC_COMMANDS.map((cmd) => (
+            <button
+              key={cmd.id}
+              disabled={isPending}
+              onClick={() => triggerMeshRpc(cmd.nodeId, cmd.id)}
+              className="border border-purple-900 bg-black p-2 text-[9px] text-purple-400 font-mono hover:bg-purple-900/30 transition-colors disabled:opacity-40"
+            >
+              {cmd.label}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

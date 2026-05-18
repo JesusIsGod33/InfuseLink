@@ -1,6 +1,8 @@
 'use server';
 
 import { writeLocalLog } from '@/lib/local-state';
+import { getNodeById, validateNodeCapabilities } from '@/lib/mesh-registry';
+import type { NodeDomain } from '@/lib/mesh-registry';
 import { revalidatePath } from 'next/cache';
 import { execSync } from 'child_process';
 
@@ -12,6 +14,10 @@ function runShell(cmd: string): string {
     return `EXEC_TIMEOUT_OR_FAULT: ${message.slice(0, 200)}`;
   }
 }
+
+// ---------------------------------------------------------------------------
+// 24-NODE COMMAND MAP — predefined matrix button handlers
+// ---------------------------------------------------------------------------
 
 const COMMAND_MAP: Record<string, () => Promise<void>> = {
   // --- ORCHESTRATION ---
@@ -120,56 +126,138 @@ const COMMAND_MAP: Record<string, () => Promise<void>> = {
   },
 };
 
+// ---------------------------------------------------------------------------
+// PRIMARY DISPATCH — matrix buttons + raw terminal execution
+// ---------------------------------------------------------------------------
+
 export async function dispatchMandate(mandateId: string, customMsg?: string) {
-  const identifier = customMsg ? 'OPERATOR' : mandateId;
+  const isRawCommand = mandateId === 'USER_DIRECTIVE' && customMsg;
+  const identifier = isRawCommand ? 'OPERATOR' : mandateId;
   const commandText = customMsg || `EXECUTE_${mandateId}`;
 
   await writeLocalLog(identifier, commandText, 'COMMAND');
 
   try {
-    if (customMsg) {
-      const input = customMsg.trim().toLowerCase();
-      if (input === 'ping') {
-        const result = runShell('curl -s -I https://www.google.com | head -n 1');
-        await writeLocalLog('ANALYST', `PROMPT_PING_RESPONSE: ${result}`, 'NETWORK_SIGNAL');
-      } else if (input === 'whoami') {
-        const result = runShell('whoami && hostname');
-        await writeLocalLog('ANALYST', `IDENTITY: ${result}`, 'COMMAND');
-      } else if (input === 'uptime') {
-        const result = runShell('uptime');
-        await writeLocalLog('ANALYST', `SYSTEM_UPTIME: ${result}`, 'SYSTEM_UPGRADE');
-      } else if (input === 'ip') {
-        const result = runShell('curl -s --max-time 5 https://api.ipify.org || echo "OFFLINE"');
-        await writeLocalLog('ANALYST', `EXTERNAL_IP: ${result}`, 'NETWORK_SIGNAL');
-      } else if (input === 'ports') {
-        const result = runShell('ss -tulpn 2>/dev/null | head -10 || echo "NO_DATA"');
-        await writeLocalLog('ANALYST', `PORT_SCAN: ${result}`, 'NETWORK_SIGNAL');
-      } else if (input === 'disk') {
-        const result = runShell('df -h /');
-        await writeLocalLog('ANALYST', `DISK_STATUS: ${result}`, 'SYSTEM_UPGRADE');
-      } else if (input === 'mem') {
-        const result = runShell('free -h');
-        await writeLocalLog('ANALYST', `MEMORY_STATUS: ${result}`, 'SYSTEM_UPGRADE');
-      } else if (input === 'docker') {
-        const result = runShell('docker ps 2>/dev/null || echo "DOCKER_OFFLINE"');
-        await writeLocalLog('ANALYST', `DOCKER_STATUS: ${result}`, 'SYSTEM_UPGRADE');
-      } else if (input === 'help') {
-        await writeLocalLog('SYSTEM', 'AVAILABLE_COMMANDS: ping, whoami, uptime, ip, ports, disk, mem, docker, help', 'COMMAND');
-      } else {
-        await writeLocalLog('SYSTEM', `UNKNOWN_DIRECTIVE: ${customMsg}`, 'ERROR');
-      }
+    if (isRawCommand) {
+      // --- RAW TERMINAL EXECUTION ---
+      // Passes the prompt input directly to the host shell
+      const stdout = execSync(customMsg, {
+        encoding: 'utf-8',
+        timeout: 10000,
+        cwd: process.cwd(),
+      });
+
+      const cleanedOutput = stdout.trim() || 'COMMAND_EXECUTED_SUCCESSFULLY_WITH_NO_STDOUT';
+      await writeLocalLog('ANALYST', cleanedOutput, 'NETWORK_SIGNAL');
     } else {
+      // --- PREDEFINED MATRIX GRID BUTTONS ---
       const handler = COMMAND_MAP[mandateId];
       if (handler) {
         await handler();
       }
     }
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : String(error);
-    await writeLocalLog('SYSTEM_FAULT', `EXECUTION_FAILED: ${message}`, 'ERROR');
+    const err = error as { stderr?: Buffer; message?: string };
+    const errorOutput = err.stderr?.toString().trim() || err.message || 'UNKNOWN_EXECUTION_EXCEPTION';
+    await writeLocalLog('SYSTEM_FAULT', `EXEC_ERROR: ${errorOutput.slice(0, 500)}`, 'ERROR');
   }
 
   revalidatePath('/');
+  revalidatePath('/operations');
+  return { success: true };
+}
+
+// ---------------------------------------------------------------------------
+// MESH RPC DISPATCH — structured node-to-node task routing
+// ---------------------------------------------------------------------------
+
+export type MeshCommandType = 'PING_GATEWAY' | 'SYSTEM_RESOURCES' | 'NET_STAT_AUDIT' | 'RUN_DNS_LOOKUP' | 'AUDIT_STORAGE';
+
+interface MeshTaskPayload {
+  task: MeshCommandType;
+  params?: Record<string, string>;
+}
+
+const MESH_TASK_HANDLERS: Record<MeshCommandType, (params?: Record<string, string>) => string> = {
+  PING_GATEWAY: () => {
+    return runShell('curl -s -o /dev/null -w "%{http_code} %{time_total}s" --max-time 5 https://www.google.com');
+  },
+  SYSTEM_RESOURCES: () => {
+    return runShell("free -m | grep Mem | awk '{print \"TOTAL:\"$2\"MB USED:\"$3\"MB FREE:\"$4\"MB\"}'");
+  },
+  NET_STAT_AUDIT: () => {
+    return runShell('ss -tln | grep -v State || echo "NO_SOCKETS"');
+  },
+  RUN_DNS_LOOKUP: (params) => {
+    const target = params?.target || 'google.com';
+    return runShell(`nslookup ${target} 2>/dev/null | tail -4 || echo "DNS_FAILED"`);
+  },
+  AUDIT_STORAGE: () => {
+    return runShell('df -h / | tail -1 && echo "---" && du -sh /home/ubuntu 2>/dev/null || echo "AUDIT_FAILED"');
+  },
+};
+
+export async function dispatchMeshDirective(targetNodeId: string, payload: MeshTaskPayload) {
+  const targetNode = getNodeById(targetNodeId);
+
+  if (!targetNode) {
+    await writeLocalLog('SECURITY_FAULT', `REJECTED: UNREGISTERED_TARGET_NODE_${targetNodeId}`, 'ERROR');
+    revalidatePath('/operations');
+    return { success: false, error: 'UNREGISTERED_TARGET' };
+  }
+
+  if (targetNode.status !== 'ONLINE') {
+    await writeLocalLog('MESH_FAULT', `NODE_${targetNodeId}_IS_OFFLINE`, 'ERROR');
+    revalidatePath('/operations');
+    return { success: false, error: 'NODE_OFFLINE' };
+  }
+
+  await writeLocalLog('ORCHESTRATOR', `ROUTING_TASK_${payload.task}_TO_${targetNodeId}`, 'COMMAND');
+
+  try {
+    if (targetNodeId === 'NEXUS_CORE_01') {
+      // --- LOCAL NODE EXECUTION ---
+      const domainMap: Record<MeshCommandType, NodeDomain> = {
+        PING_GATEWAY: 'NET',
+        SYSTEM_RESOURCES: 'SYS',
+        NET_STAT_AUDIT: 'TELEMETRY',
+        RUN_DNS_LOOKUP: 'NET',
+        AUDIT_STORAGE: 'LOGISTICS',
+      };
+
+      const requiredDomain = domainMap[payload.task];
+      if (!validateNodeCapabilities(targetNodeId, requiredDomain)) {
+        await writeLocalLog('SECURITY_FAULT', `DOMAIN_ACCESS_DENIED: ${requiredDomain}_ON_${targetNodeId}`, 'ERROR');
+        revalidatePath('/operations');
+        return { success: false, error: 'DOMAIN_ACCESS_DENIED' };
+      }
+
+      const handler = MESH_TASK_HANDLERS[payload.task];
+      const result = handler(payload.params);
+      await writeLocalLog('MESH_AGENT', `${payload.task}_RESULT: ${result}`, 'NETWORK_SIGNAL');
+    } else {
+      // --- REMOTE NODE DISPATCH (signed HTTP request) ---
+      const nodeEndpoint = `${targetNode.endpoint}/api/rpc`;
+
+      const response = await fetch(nodeEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${targetNode.token}`,
+        },
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(5000),
+      });
+
+      if (!response.ok) throw new Error(`NODE_RESPONSE_HTTP_${response.status}`);
+      const result = await response.json();
+      await writeLocalLog(targetNodeId, `EXTERNAL_SIGNAL: ${JSON.stringify(result)}`, 'NETWORK_SIGNAL');
+    }
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    await writeLocalLog('SYSTEM_FAULT', `MESH_BRIDGE_ERROR_${payload.task}: ${message.slice(0, 300)}`, 'ERROR');
+  }
+
   revalidatePath('/operations');
   return { success: true };
 }

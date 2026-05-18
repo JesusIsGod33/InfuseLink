@@ -10,7 +10,7 @@ export default function OperationsPage() {
           InfuseLink // Autonomous Orchestration Console
         </h1>
         <p className="text-[10px] text-teal-700 mt-1">
-          FILE_IPC_ACTIVE — SUBPROCESS_BRIDGE_ONLINE — LIVE_EXECUTION_MODE
+          FILE_IPC_ACTIVE — SUBPROCESS_BRIDGE_ONLINE — MESH_RPC_ENABLED — RAW_TERMINAL_MODE
         </p>
       </header>
 

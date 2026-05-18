@@ -12,9 +12,11 @@ export default function SovereignPrompt() {
     const value = input.trim();
     if (!value) return;
 
+    const commandToSend = value;
+    setInput('');
+
     startTransition(async () => {
-      await dispatchMandate('USER_DIRECTIVE', value);
-      setInput('');
+      await dispatchMandate('USER_DIRECTIVE', commandToSend);
     });
   };
 
@@ -29,7 +31,7 @@ export default function SovereignPrompt() {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         disabled={isPending}
-        placeholder="ENTER DIRECTIVE... (type 'help' for commands)"
+        placeholder="Enter live terminal command (e.g., ls -la, uname -a, whoami)..."
         className="flex-1 bg-transparent border-none outline-none text-[11px] text-teal-300 placeholder:text-teal-900 caret-teal-400 disabled:opacity-40"
       />
       <button
