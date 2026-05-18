@@ -83,7 +83,7 @@ const COMMAND_MAP: Record<string, () => Promise<void>> = {
     await writeLocalLog('ANALYST', `PORT_MAP_SCAN: ${result}`, 'NETWORK_SIGNAL');
   },
   DNS_TUNNEL: async () => {
-    const result = runShell('nslookup google.com 2>/dev/null | tail -4 || echo "DNS_RESOLUTION_FAILED"');
+    const result = runShell('getent hosts google.com || echo "DNS_RESOLUTION_FAILED"');
     await writeLocalLog('ANALYST', `DNS_RESOLVE: ${result}`, 'NETWORK_SIGNAL');
   },
   PACKET_AUDIT: async () => {
@@ -190,7 +190,7 @@ const MESH_TASK_HANDLERS: Record<MeshCommandType, (params?: Record<string, strin
   },
   RUN_DNS_LOOKUP: (params) => {
     const target = params?.target || 'google.com';
-    return runShell(`nslookup ${target} 2>/dev/null | tail -4 || echo "DNS_FAILED"`);
+    return runShell(`getent hosts ${target} || echo "DNS_FAILED"`);
   },
   AUDIT_STORAGE: () => {
     return runShell('df -h / | tail -1 && echo "---" && du -sh /home/ubuntu 2>/dev/null || echo "AUDIT_FAILED"');
