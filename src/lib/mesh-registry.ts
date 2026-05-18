@@ -16,7 +16,7 @@ const SECURE_NODE_REGISTRY: MeshNode[] = [
     endpoint: 'http://127.0.0.1:3000',
     status: 'ONLINE',
     token: process.env.MESH_CORE_TOKEN || 'DEFAULT_LOCAL_ROOT_TOKEN',
-    allowedDomains: ['SYS', 'TELEMETRY', 'LOGISTICS'],
+    allowedDomains: ['SYS', 'NET', 'TELEMETRY', 'LOGISTICS'],
   },
   {
     id: 'NODE_ALPHA',
