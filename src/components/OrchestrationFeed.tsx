@@ -7,6 +7,12 @@ const TYPE_COLORS: Record<string, string> = {
   SYSTEM_UPGRADE: 'text-emerald-400',
 };
 
+function getMessageColor(log: { nodeId: string; message: string; type: string }): string {
+  if (log.nodeId === 'OPERATOR' && log.message.includes('AGENT_PROMPT')) return 'text-purple-400';
+  if (log.nodeId === 'MESH_AGENT' && log.message.includes('ACKNOWLEDGEMENT')) return 'text-purple-400';
+  return TYPE_COLORS[log.type] || 'text-white';
+}
+
 export default async function OrchestrationFeed() {
   const logs = await readLocalLogs();
 
@@ -24,7 +30,7 @@ export default async function OrchestrationFeed() {
         <div key={log.id} className="flex gap-3 border-l border-teal-500/20 pl-2">
           <span className="text-teal-700 shrink-0">[{log.timestamp}]</span>
           <span className="text-yellow-600 w-24 shrink-0">{log.nodeId}:</span>
-          <span className={`${TYPE_COLORS[log.type] || 'text-white'} tracking-wider flex-1 break-all whitespace-pre-wrap`}>
+          <span className={`${getMessageColor(log)} tracking-wider flex-1 break-all whitespace-pre-wrap`}>
             {log.message}
           </span>
         </div>

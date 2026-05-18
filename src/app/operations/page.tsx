@@ -1,5 +1,6 @@
 import OrchestrationFeed from '@/components/OrchestrationFeed';
 import SovereignMatrix from '@/components/SovereignMatrix';
+import AdvancedControlMatrix from '@/components/AdvancedControlMatrix';
 import SovereignPrompt from '@/components/SovereignPrompt';
 
 export default function OperationsPage() {
@@ -19,6 +20,10 @@ export default function OperationsPage() {
           Sovereign Command Matrix
         </h2>
         <SovereignMatrix />
+      </section>
+
+      <section>
+        <AdvancedControlMatrix />
       </section>
 
       <section className="flex-1 flex flex-col">
