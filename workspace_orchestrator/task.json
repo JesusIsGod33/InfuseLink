@@ -1,0 +1,16 @@
+{
+  "steps": [
+    {
+      "name": "System Health & Node Ingestion",
+      "command": "uname -r && uptime"
+    },
+    {
+      "name": "Parallel Knowledge Base Ingestion & Digest",
+      "command": "find ~/ecosystem -type f \\( -name '*.py' -o -name '*.sh' -o -name '*.json' -o -name '*.md' \\) | xargs -P 4 -I {} sh -c 'echo \"[Digest] Processing: {}\" && head -n 5 \"{}\"'"
+    },
+    {
+      "name": "Execute Local Git Sync Bridge",
+      "command": "bash ~/ecosystem/git_bridge/sync.sh || echo '[Bridge] Skipping external push (local-only mode)'"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "repositories": [
+    {
+      "name": "InfuseLink",
+      "url": "https://github.com/JesusIsGod33/InfuseLink.git",
+      "branch": "main",
+      "local_path": "/home/Woken/ecosystem"
+    }
+  ]
+}
