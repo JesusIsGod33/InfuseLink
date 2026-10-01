@@ -1,0 +1,9 @@
+{
+  "/boost_cpu": "bash /home/infuselink/mesh/scripts/optimize_core.sh",
+  "/ram_stage": "echo 'Staging active logic in tmpfs RAM-disk...'",
+  "/bridge_init": "python3 /home/infuselink/mesh/scripts/bridge_maintainer.py",
+  "/node_assimilate": "bash /home/infuselink/mesh/scripts/assimilate.sh",
+  "/swarm_report": "python3 /home/infuselink/mesh/scripts/node_handshake.py",
+  "/sys_verify": "lscpu | grep MHz && free -h",
+  "/void_scan": "ps aux --sort=-%cpu | head -n 5"
+}
