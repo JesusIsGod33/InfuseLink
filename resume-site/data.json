@@ -1,0 +1,48 @@
+{
+  "summary": "Bilingual technical support analyst, Linux/Windows operator, and workflow automation builder focused on reliable systems, clear documentation, and practical tooling.",
+  "competencies": [
+    { "category": "Systems & Identity", "items": ["Windows", "Linux", "macOS", "Active Directory", "M365", "Entra ID", "Okta"] },
+    { "category": "Automation & Scripting", "items": ["Python", "PowerShell", "Bash", "FastAPI", "Docker", "Git"] },
+    { "category": "Support & Service Ops", "items": ["ServiceNow", "Zendesk", "Jira", "Salesforce", "Knowledge Base Authoring"] },
+    { "category": "Operations & Craft", "items": ["Inventory & POS Tracking", "Workflow Design", "Digital Pattern Drafting", "Culinary Prep"] }
+  ],
+  "experience": [
+    {
+      "role": "Digital & Desktop Support Analyst",
+      "track": "it",
+      "period": "2023 - 2026",
+      "highlights": [
+        "Resolved enterprise Windows hardware and software incidents and authored Tier 1 knowledge base articles.",
+        "Administered user accounts and access across Active Directory, Microsoft 365, Entra ID, and Okta.",
+        "Tracked escalations and service workflows using ServiceNow, Zendesk, Jira, and Salesforce."
+      ]
+    },
+    {
+      "role": "IT Support & Help Desk Technician",
+      "track": "it",
+      "period": "2022 - 2023",
+      "highlights": [
+        "Delivered Tier 1 troubleshooting and account support across web platforms and digital channels.",
+        "Documented repeatable resolution steps and escalated complex technical issues cleanly."
+      ]
+    },
+    {
+      "role": "Kitchen Operations & POS Inventory Lead",
+      "track": "ops",
+      "period": "2026",
+      "highlights": [
+        "Coordinated kitchen prep flow and tracked restaurant inventory using Clover POS.",
+        "Maintained consistency, timing, and stock accuracy during active service shifts."
+      ]
+    },
+    {
+      "role": "Fulfillment & Retail Merchandising Associate",
+      "track": "ops",
+      "period": "2019 - 2026",
+      "highlights": [
+        "Handled high-volume order fulfillment, inventory accuracy, and seasonal display care.",
+        "Adapted quickly across fast-paced physical operations and structured daily targets."
+      ]
+    }
+  ]
+}
